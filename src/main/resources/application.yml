@@ -1,21 +1,6 @@
 # This configuration should be fetched from Spring Cloud Config
 # Common configuration across different environments
 
-jdbc:
-  driverClassName: org.postgresql.Driver
-  initSql: SET search_path TO public, raizekusu;
-
-#Hibernate
-hibernate:
-  connection:
-    autocommit: false
-  format_sql: true
-  hbm2ddl:
-    auto: validate
-  show_sql: false
-  current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-  dialect: org.hibernate.dialect.PostgreSQLDialect
-
 spring:
   cache:
     cache-names: primary
@@ -24,9 +9,13 @@ spring:
   profiles:
     #default profile, this can be overriden by environmental variable
      active: default
-  flyway:
-    locations: classpath:database/migration
-    schemas: raizekusu
+  r2dbc:
+    properties:
+      schema: valstrax
+    pool:
+      enabled: true
+      initial-size: 2
+      max-size: 100
 
 management:
   endpoints:

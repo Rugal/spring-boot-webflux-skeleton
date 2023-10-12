@@ -3,7 +3,10 @@
 
 # This is for local development only, shall not use otherwise
 # Database
-jdbc:
-  url: jdbc:postgresql://localhost:5432/postgres
-  username: postgres
-  password: 123
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://127.0.0.1:5432/postgres
+    properties:
+      schema: valstrax
+    username: postgres
+    password: 123
