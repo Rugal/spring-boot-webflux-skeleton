@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>ga.rugal</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.17.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>r2dbc</artifactId>
+  <version>1.0.0</version>
+
+  <name>R2DBC test</name>
+  <properties>
+    <!-- test switch -->
+    <skip.surefire.tests>false</skip.surefire.tests>
+    <skip.failsafe.tests>true</skip.failsafe.tests>
+    <jacoco.skip.coverage.check>true</jacoco.skip.coverage.check>
+    <!--
+      dependency
+    -->
+    <!--
+      plugin
+    -->
+  </properties>
+
+  <dependencies>
+    <!-- kotlin -->
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-reflect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.oshai</groupId>
+      <artifactId>kotlin-logging-jvm</artifactId>
+    </dependency>
+    <!--
+      reactor
+    -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-kotlin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor.kotlin</groupId>
+      <artifactId>reactor-kotlin-extensions</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-reactor</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.projectreactor</groupId>
+      <artifactId>reactor-test</artifactId>
+<!--      <version>3.5.10</version>-->
+    </dependency>
+    <!--
+      spring boot application
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-r2dbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>r2dbc-postgresql</artifactId>
+      <version>1.0.2.RELEASE</version>
+    </dependency>
+    <!-- junit 5 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Auto Append -->
+  </dependencies>
+
+  <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+
+    <plugins>
+      <!-- Unit Test -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>""</argLine>
+        </configuration>
+      </plugin>
+      <!-- Integration Test -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+      </plugin>
+      <!-- compiler -->
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--
+        deploy
+      -->
+      <!-- spring boot plugin -->
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <!--      <plugin>-->
+      <!--        <groupId>org.codehaus.mojo</groupId>-->
+      <!--        <artifactId>build-helper-maven-plugin</artifactId>-->
+      <!--        <version>3.4.0</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <configuration>-->
+      <!--              <sources>-->
+      <!--                <source>${project.build.directory}/generated-sources/kapt/compile</source>-->
+      <!--                <source>${project.build.directory}/generated-sources/graphql</source>-->
+      <!--              </sources>-->
+      <!--            </configuration>-->
+      <!--            <phase>generate-sources</phase>-->
+      <!--            <goals>-->
+      <!--              <goal>add-source</goal>-->
+      <!--            </goals>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+    </plugins>
+  </build>
+</project>
