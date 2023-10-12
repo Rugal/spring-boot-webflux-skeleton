@@ -12,7 +12,7 @@
   <logger name="config" additivity="false" level="TRACE">
     <appender-ref ref="CONSOLE"/>
   </logger>
-  <logger name="org.springframework" additivity="false" level="ERROR">
+  <logger name="org.springframework" additivity="false" level="INFO">
     <appender-ref ref="CONSOLE" />
   </logger>
   <logger name="org.hibernate" additivity="false" level="ERROR">

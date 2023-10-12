@@ -10,8 +10,6 @@ spring:
     #default profile, this can be overriden by environmental variable
      active: default
   r2dbc:
-    properties:
-      schema: valstrax
     pool:
       enabled: true
       initial-size: 2

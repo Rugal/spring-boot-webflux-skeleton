@@ -6,7 +6,7 @@
 spring:
   r2dbc:
     url: r2dbc:postgresql://127.0.0.1:5432/postgres
-    properties:
-      schema: valstrax
+#    properties:
+#      schema: valstrax
     username: postgres
     password: 123

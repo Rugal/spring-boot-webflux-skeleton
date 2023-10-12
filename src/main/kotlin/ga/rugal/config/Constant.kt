@@ -1,4 +1,4 @@
-package config
+package ga.rugal.config
 
 /**
  * Record constant string.
