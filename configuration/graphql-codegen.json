@@ -1,0 +1,18 @@
+{
+  "fieldsWithResolvers": [
+  ],
+  "apiInterfaceStrategy": "DO_NOT_GENERATE",
+  "customTypesMapping": {
+  },
+  "apiReturnType": "reactor.core.publisher.Mono",
+  "apiReturnListType": "reactor.core.publisher.Flux",
+  "modelNameSuffix": "Dto",
+  "modelValidationAnnotation": "@jakarta.validation.constraints.NotNull",
+  "customAnnotationsMapping": {
+    "^Query\\.\\w+$": ["org.springframework.graphql.data.method.annotation.QueryMapping"],
+    "^Mutation\\.\\w+$": ["org.springframework.graphql.data.method.annotation.MutationMapping"],
+    "^Subscription\\.\\w+$": ["org.springframework.graphql.data.method.annotation.SubscriptionMapping"]
+  },
+  "resolverArgumentAnnotations": ["org.springframework.graphql.data.method.annotation.Argument"],
+  "generateDataFetchingEnvironmentArgumentInApis": true
+}

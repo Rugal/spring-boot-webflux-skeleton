@@ -1,0 +1,11 @@
+# getXXX: to get a single object by its id
+# findXXX: to find/search for a list of object by predicate with pagination
+
+input NewTag {
+  name: String!
+}
+
+type Tag {
+  id: Int!
+  name: String!
+}
