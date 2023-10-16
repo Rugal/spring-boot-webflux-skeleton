@@ -11,7 +11,7 @@ class TagDaoIntegrationTest(@Autowired val dao: TagDao) : DaoIntegrationTestBase
   fun findAll_ok() {
     StepVerifier
       .create(this.dao.findAll())
-      .expectNextCount(16)
+      .expectNextCount(5)
       .verifyComplete()
   }
 

@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS tag (
+  id INT NOT NULL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL
+ );
+
+INSERT INTO tag VALUES(1, 'BlueRay');
+INSERT INTO tag VALUES(2, 'Rugal');
+INSERT INTO tag VALUES(3, 'Bernstein');
+INSERT INTO tag VALUES(4, 'Tenjin');
+INSERT INTO tag VALUES(5, 'Descend');

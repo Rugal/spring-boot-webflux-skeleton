@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test
 class TagControllerIntegrationTest : ControllerIntegrationTestBase() {
 
   @Test
-  fun test() {
+  fun test_found() {
     this.client
       .get()
-      .uri("/tag")
+      .uri("/tag/1")
       .exchange()
       .expectStatus().isOk
       .expectBody()

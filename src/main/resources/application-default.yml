@@ -5,8 +5,9 @@
 # Database
 spring:
   r2dbc:
-    url: r2dbc:postgresql://127.0.0.1:5432/postgres
+    url: r2dbc:h2:mem:///h2db
+#    url: r2dbc:postgresql://127.0.0.1:5432/postgres
 #    properties:
 #      schema: valstrax
-    username: postgres
-    password: 123
+#    username: postgres
+#    password: 123
