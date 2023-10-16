@@ -1,9 +1,10 @@
 package ga.rugal.reactor.springmvc.graphql
 
-import ga.rugal.reactor.core.dao.TagDao
 import ga.rugal.reactor.core.entity.Tag
 import ga.rugal.reactor.core.service.TagService
+import ga.rugal.reactor.springmvc.exception.TagNotFoundException
 import com.ninjasquad.springmockk.MockkBean
+import graphql.ErrorType
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -23,9 +24,6 @@ class RootQueryTest {
   lateinit var tester: GraphQlTester
 
   @MockkBean
-  lateinit var dao: TagDao
-
-  @MockkBean
   lateinit var service: TagService
 
   private val u = Tag(
@@ -35,8 +33,7 @@ class RootQueryTest {
 
   @BeforeEach
   fun setup() {
-    every { service.tagDao } returns dao
-    every { dao.findById(1) } returns Mono.just(u)
+    every { service.findById(any()) } returns Mono.just(u)
   }
 
   @Test
@@ -47,6 +44,19 @@ class RootQueryTest {
       .path("getTag.id").entity(Integer::class.java).isEqualTo(u.id)
       .path("getTag.name").entity(String::class.java).isEqualTo(u.name)
 
-    verify(exactly = 1) { dao.findById(1) }
+    verify(exactly = 1) { service.findById(any()) }
+  }
+
+  @Test
+  fun getTag_not_found() {
+    every { service.findById(any()) } returns Mono.error { TagNotFoundException(u.id) }
+
+    tester.documentName("getTag")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { service.findById(any()) }
   }
 }

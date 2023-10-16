@@ -15,7 +15,8 @@ class RootQuery(
 ) : QueryResolver {
   private val LOG = KotlinLogging.logger {}
 
-  override fun getTag(id: Int, env: DataFetchingEnvironment): Mono<TagDto> = this.tagService.tagDao
+  override fun getTag(id: Int, env: DataFetchingEnvironment): Mono<TagDto> = this.tagService
     .findById(id)
+    .onErrorStop()
     .map { TagMapper.I.from(it) }
 }
