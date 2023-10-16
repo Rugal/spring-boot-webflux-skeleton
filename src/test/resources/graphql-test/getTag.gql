@@ -1,0 +1,6 @@
+query getTag($id: Int!) {
+  getTag(id: $id) {
+    id
+    name
+  }
+}
