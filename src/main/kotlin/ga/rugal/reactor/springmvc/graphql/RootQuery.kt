@@ -17,6 +17,5 @@ class RootQuery(
 
   override fun getTag(id: Int, env: DataFetchingEnvironment): Mono<TagDto> = this.tagService
     .findById(id)
-    .onErrorStop()
     .map { TagMapper.I.from(it) }
 }

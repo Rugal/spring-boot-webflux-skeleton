@@ -112,11 +112,6 @@
       <artifactId>r2dbc-h2</artifactId>
       <version>1.0.0.RELEASE</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.postgresql</groupId>-->
-<!--      <artifactId>r2dbc-postgresql</artifactId>-->
-<!--      <version>1.0.2.RELEASE</version>-->
-<!--    </dependency>-->
     <!-- junit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
