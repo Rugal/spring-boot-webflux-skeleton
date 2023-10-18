@@ -1,4 +1,4 @@
-package ga.rugal.config
+package ga.rugal.reactor.config
 
 /**
  * Record constant string.

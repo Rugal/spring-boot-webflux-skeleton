@@ -1,4 +1,4 @@
-package ga.rugal.config
+package ga.rugal.reactor.config
 
 import org.springframework.boot.test.context.TestConfiguration
 

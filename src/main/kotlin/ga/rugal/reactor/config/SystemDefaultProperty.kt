@@ -1,4 +1,4 @@
-package ga.rugal.config
+package ga.rugal.reactor.config
 
 /**
  * Some system level properties.
