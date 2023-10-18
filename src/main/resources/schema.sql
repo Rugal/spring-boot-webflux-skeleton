@@ -1,12 +1,14 @@
 DROP TABLE IF EXISTS tag;
 
-CREATE TABLE tag (
-  id INT NOT NULL PRIMARY KEY,
+CREATE TABLE tag
+(
+  id   INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(255) NOT NULL
- );
+);
 
-INSERT INTO tag VALUES(1, 'BlueRay');
-INSERT INTO tag VALUES(2, 'Rugal');
-INSERT INTO tag VALUES(3, 'Bernstein');
-INSERT INTO tag VALUES(4, 'Tenjin');
-INSERT INTO tag VALUES(5, 'Descend');
+INSERT INTO tag(name)
+VALUES ('BlueRay'),
+       ('Rugal'),
+       ('Bernstein'),
+       ('Tenjin'),
+       ('Descend');
