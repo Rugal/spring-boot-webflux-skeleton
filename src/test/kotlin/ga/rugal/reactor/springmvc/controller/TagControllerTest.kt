@@ -48,7 +48,7 @@ class TagControllerTest : ControllerUnitTestBase() {
       .get()
       .uri("/tag/1")
       .exchange()
-      .expectStatus().isOk
+      .expectStatus().isNotFound
 
     verify(exactly = 1) { service.findById(any()) }
   }
