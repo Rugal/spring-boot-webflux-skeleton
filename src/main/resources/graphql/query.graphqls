@@ -6,4 +6,19 @@ type Query {
     Get tag by id
     """
     getTag(id: Int!): Tag!
+
+    """
+    Get student by id
+    """
+    getStudent(id: Int!): Student!
+
+    """
+    Get course by id
+    """
+    getCourse(id: Int!): Course!
+
+    """
+    Get registration by id
+    """
+    getRegistration(id: Int!): Registration!
 }

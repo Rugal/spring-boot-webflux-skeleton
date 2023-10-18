@@ -17,4 +17,4 @@ open class Main {
       SpringApplication.run(Main::class.java, *args)
     }
   }
-}
+} 

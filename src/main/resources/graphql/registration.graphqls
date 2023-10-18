@@ -1,0 +1,17 @@
+# getXXX: to get a single object by its id
+# findXXX: to find/search for a list of object by predicate with pagination
+
+input NewRegistration {
+  studentId: Int!
+  courseId: Int!
+  score: Int
+}
+
+type Registration {
+  id: Int!
+  student: Student!
+  course: Course!
+  score: Int
+  createAt: Int!
+  updateAt: Int!
+}
