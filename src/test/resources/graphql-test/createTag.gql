@@ -2,5 +2,7 @@ mutation createTag($input: NewTag!) {
   createTag(input: $input) {
     id
     name
+    createAt
+    updateAt
   }
 }

@@ -46,6 +46,8 @@ class RootMutationTest {
       .execute()
       .path("createTag.id").entity(Integer::class.java).isEqualTo(u.id)
       .path("createTag.name").entity(String::class.java).isEqualTo(u.name)
+      .path("createTag.createAt").hasValue()
+      .path("createTag.updateAt").hasValue()
 
     verify(exactly = 1) { dao.save(any()) }
   }

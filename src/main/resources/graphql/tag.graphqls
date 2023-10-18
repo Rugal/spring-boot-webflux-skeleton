@@ -8,4 +8,6 @@ input NewTag {
 type Tag {
   id: Int!
   name: String!
+  createAt: Int!
+  updateAt: Int!
 }
