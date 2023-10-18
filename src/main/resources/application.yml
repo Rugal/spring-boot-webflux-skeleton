@@ -1,6 +1,10 @@
 # This configuration should be fetched from Spring Cloud Config
 # Common configuration across different environments
 
+application:
+  title: R2DBC
+  version: 1.0.0
+
 spring:
   profiles:
     #default profile, this can be overriden by environmental variable
