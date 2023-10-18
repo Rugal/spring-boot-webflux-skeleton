@@ -13,15 +13,15 @@ import org.springframework.data.relational.core.mapping.Table
 data class Registration(
   @Id val id: Int,
 
-  @JoinColumn(name="student_id", nullable=false)
+  @JoinColumn(name = "student_id", nullable = false)
   @ManyToOne
-  val student: Student,
+  val student: Student? = null,
 
-  @JoinColumn(name="course_id", nullable=false)
+  @JoinColumn(name = "course_id", nullable = false)
   @ManyToOne
-  val course: Course,
+  val course: Course? = null,
 
-  val score: Int,
+  val score: Int? = null,
 
   @Column(name = "create_at")
   var createAt: Long = Instant.now().epochSecond,

@@ -20,7 +20,7 @@ import org.mapstruct.factory.Mappers
 interface StudentMapper {
   fun from(u: Student): StudentDto
 
-  fun to(newUserDto: NewStudentDto): Tag
+  fun to(newUserDto: NewStudentDto): Student
 
   companion object {
     @JvmField

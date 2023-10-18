@@ -9,6 +9,9 @@ import ga.rugal.reactor.core.service.CourseService
 import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
+import ga.rugal.reactor.springmvc.mapper.CourseMapper
+import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
+import ga.rugal.reactor.springmvc.mapper.StudentMapper
 import ga.rugal.reactor.springmvc.mapper.TagMapper
 import graphql.schema.DataFetchingEnvironment
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -28,15 +31,15 @@ class RootQuery(
     .findById(id)
     .map { TagMapper.I.from(it) }
 
-  override fun getStudent(id: Int, env: DataFetchingEnvironment): Mono<StudentDto> {
-    TODO("Not yet implemented")
-  }
+  override fun getStudent(id: Int, env: DataFetchingEnvironment): Mono<StudentDto> = this.studentService
+    .findById(id)
+    .map { StudentMapper.I.from(it) }
 
-  override fun getCourse(id: Int, env: DataFetchingEnvironment): Mono<CourseDto> {
-    TODO("Not yet implemented")
-  }
+  override fun getCourse(id: Int, env: DataFetchingEnvironment): Mono<CourseDto> = this.courseService
+    .findById(id)
+    .map { CourseMapper.I.from(it) }
 
-  override fun getRegistration(id: Int, env: DataFetchingEnvironment): Mono<RegistrationDto> {
-    TODO("Not yet implemented")
-  }
+  override fun getRegistration(id: Int, env: DataFetchingEnvironment): Mono<RegistrationDto> = this.registrationService
+    .findById(id)
+    .map { RegistrationMapper.I.from(it) }
 }

@@ -3,7 +3,6 @@ package ga.rugal.reactor.springmvc.mapper
 import ga.rugal.r2dbc.graphql.NewRegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationDto
 import ga.rugal.reactor.core.entity.Registration
-import ga.rugal.reactor.core.entity.Tag
 import org.mapstruct.Mapper
 import org.mapstruct.NullValuePropertyMappingStrategy
 import org.mapstruct.factory.Mappers
@@ -21,7 +20,7 @@ import org.mapstruct.factory.Mappers
 interface RegistrationMapper {
   fun from(u: Registration): RegistrationDto
 
-  fun to(newUserDto: NewRegistrationDto): Tag
+  fun to(newUserDto: NewRegistrationDto): Registration
 
   companion object {
     @JvmField

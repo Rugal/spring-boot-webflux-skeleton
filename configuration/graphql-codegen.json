@@ -1,5 +1,7 @@
 {
   "fieldsWithResolvers": [
+    "Registration.student",
+    "Registration.course"
   ],
   "apiInterfaceStrategy": "DO_NOT_GENERATE",
   "customTypesMapping": {
