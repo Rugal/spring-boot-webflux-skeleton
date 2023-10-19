@@ -4,5 +4,9 @@ updateXXX(id: ID, UpdateXXXInput): update an existing object
 deleteXXX(id: ID) delete an existing object
 """
 type Mutation {
-    createTag(input: NewTag!): Tag!
+  createTag(input: NewTag!): Tag!
+
+  createStudent(input: NewStudent!): Student!
+
+  createCourse(input: NewCourse!): Course!
 }
