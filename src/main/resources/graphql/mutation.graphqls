@@ -9,4 +9,6 @@ type Mutation {
   createStudent(input: NewStudent!): Student!
 
   createCourse(input: NewCourse!): Course!
+
+  createRegistration(input: NewRegistration!): Registration!
 }

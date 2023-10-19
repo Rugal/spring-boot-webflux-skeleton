@@ -3,8 +3,10 @@ package ga.rugal.reactor.springmvc.graphql
 import ga.rugal.r2dbc.graphql.CourseDto
 import ga.rugal.r2dbc.graphql.MutationResolver
 import ga.rugal.r2dbc.graphql.NewCourseDto
+import ga.rugal.r2dbc.graphql.NewRegistrationDto
 import ga.rugal.r2dbc.graphql.NewStudentDto
 import ga.rugal.r2dbc.graphql.NewTagDto
+import ga.rugal.r2dbc.graphql.RegistrationDto
 import ga.rugal.r2dbc.graphql.StudentDto
 import ga.rugal.r2dbc.graphql.TagDto
 import ga.rugal.reactor.core.service.CourseService
@@ -47,4 +49,8 @@ class RootMutation(
     .map { CourseMapper.I.to(input) }
     .flatMap { this.courseService.dao.save(it) }
     .map { CourseMapper.I.from(it) }
+
+  override fun createRegistration(input: NewRegistrationDto?, env: DataFetchingEnvironment?): Mono<RegistrationDto> {
+    TODO("Not yet implemented")
+  }
 }
