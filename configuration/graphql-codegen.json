@@ -3,6 +3,9 @@
     "Registration.student",
     "Registration.course"
   ],
+  "parametrizedResolverAnnotations": [
+    "org.springframework.graphql.data.method.annotation.SchemaMapping(typeName=\"{{TYPE_NAME}}\")"
+  ],
   "apiInterfaceStrategy": "DO_NOT_GENERATE",
   "customTypesMapping": {
   },
