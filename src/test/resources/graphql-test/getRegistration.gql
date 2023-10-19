@@ -1,0 +1,16 @@
+query getRegistration($id: Int!) {
+  getRegistration(id: $id) {
+    id
+    score
+    student {
+      id
+      name
+    }
+    course {
+      id
+      name
+    }
+    createAt
+    updateAt
+  }
+}

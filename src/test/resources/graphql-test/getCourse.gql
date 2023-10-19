@@ -1,0 +1,8 @@
+query getCourse($id: Int!) {
+  getCourse(id: $id) {
+    id
+    name
+    createAt
+    updateAt
+  }
+}

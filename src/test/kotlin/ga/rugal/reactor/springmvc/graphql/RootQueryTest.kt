@@ -1,7 +1,15 @@
 package ga.rugal.reactor.springmvc.graphql
 
+import ga.rugal.reactor.core.entity.Course
+import ga.rugal.reactor.core.entity.Student
 import ga.rugal.reactor.core.entity.Tag
+import ga.rugal.reactor.core.service.CourseService
+import ga.rugal.reactor.core.service.RegistrationService
+import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
+import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
+import ga.rugal.reactor.springmvc.exception.RegistrationNotFoundException
+import ga.rugal.reactor.springmvc.exception.StudentNotFoundException
 import ga.rugal.reactor.springmvc.exception.TagNotFoundException
 import com.ninjasquad.springmockk.MockkBean
 import graphql.ErrorType
@@ -26,7 +34,26 @@ class RootQueryTest {
   @MockkBean
   lateinit var service: TagService
 
+  @MockkBean
+  lateinit var courseService: CourseService
+
+  @MockkBean
+  lateinit var studentService: StudentService
+
+  @MockkBean
+  lateinit var registrationService: RegistrationService
+
   private val u = Tag(
+    id = 1,
+    name = "Rugal",
+  )
+
+  private val c = Course(
+    id = 1,
+    name = "Rugal",
+  )
+
+  private val s = Student(
     id = 1,
     name = "Rugal",
   )
@@ -34,6 +61,8 @@ class RootQueryTest {
   @BeforeEach
   fun setup() {
     every { service.findById(any()) } returns Mono.just(u)
+    every { courseService.findById(any()) } returns Mono.just(c)
+    every { studentService.findById(any()) } returns Mono.just(s)
   }
 
   @Test
@@ -58,5 +87,62 @@ class RootQueryTest {
       .expect { it.errorType == ErrorType.ValidationError }
 
     verify(exactly = 1) { service.findById(any()) }
+  }
+
+  @Test
+  fun getCourse_found() {
+    tester.documentName("getCourse")
+      .variable("id", 1)
+      .executeAndVerify()
+
+    verify(exactly = 1) { courseService.findById(any()) }
+  }
+
+  @Test
+  fun getCourse_not_found() {
+    every { courseService.findById(any()) } returns Mono.error { CourseNotFoundException(u.id) }
+
+    tester.documentName("getCourse")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { courseService.findById(any()) }
+  }
+
+  @Test
+  fun getStudent_found() {
+    tester.documentName("getStudent")
+      .variable("id", 1)
+      .executeAndVerify()
+
+    verify(exactly = 1) { studentService.findById(any()) }
+  }
+
+  @Test
+  fun getStudent_not_found() {
+    every { studentService.findById(any()) } returns Mono.error { StudentNotFoundException(u.id) }
+
+    tester.documentName("getStudent")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { studentService.findById(any()) }
+  }
+
+  @Test
+  fun getRegistration_not_found() {
+    every { registrationService.findById(any()) } returns Mono.error { RegistrationNotFoundException(u.id) }
+
+    tester.documentName("getRegistration")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { registrationService.findById(any()) }
   }
 }
