@@ -1,6 +1,7 @@
 package ga.rugal.reactor.springmvc.graphql
 
 import ga.rugal.reactor.core.entity.Course
+import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.core.entity.Student
 import ga.rugal.reactor.core.entity.Tag
 import ga.rugal.reactor.core.service.CourseService
@@ -25,7 +26,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import reactor.core.publisher.Mono
 
 @ExtendWith(MockKExtension::class)
-@GraphQlTest(RootQuery::class)
+@GraphQlTest(RootQuery::class, RegistrationFieldResolver::class)
 class RootQueryTest {
 
   @Autowired
@@ -58,11 +59,33 @@ class RootQueryTest {
     name = "Rugal",
   )
 
+  private val r = Registration(
+    id = 1,
+    score = 99,
+    studentId = 1,
+    courseId = 1,
+  )
+
   @BeforeEach
   fun setup() {
     every { service.findById(any()) } returns Mono.just(u)
     every { courseService.findById(any()) } returns Mono.just(c)
     every { studentService.findById(any()) } returns Mono.just(s)
+    every { registrationService.findById(any()) } returns Mono.just(r)
+  }
+
+  @Test
+  fun getTag_other_exception() {
+    every { service.findById(any()) } returns Mono.error { NullPointerException(s.name) }
+
+    tester.documentName("getTag")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+      .expect { it.message == s.name }
+
+    verify(exactly = 1) { service.findById(any()) }
   }
 
   @Test
@@ -131,6 +154,20 @@ class RootQueryTest {
       .expect { it.errorType == ErrorType.ValidationError }
 
     verify(exactly = 1) { studentService.findById(any()) }
+  }
+
+  @Test
+  fun getRegistration_found() {
+    tester.documentName("getRegistration")
+      .variable("id", 1)
+      .execute()
+      .path("getRegistration.score").entity(Int::class.java).isEqualTo(r.score!!)
+      .path("getRegistration.student.id").entity(Int::class.java).isEqualTo(s.id)
+      .path("getRegistration.course.id").entity(Int::class.java).isEqualTo(c.id)
+
+    verify(exactly = 3) { registrationService.findById(any()) }
+    verify(exactly = 1) { studentService.findById(any()) }
+    verify(exactly = 1) { courseService.findById(any()) }
   }
 
   @Test

@@ -20,7 +20,6 @@ class RegistrationFieldResolver(
   private val registrationService: RegistrationService,
 ) : RegistrationResolver {
 
-
   override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
     .findById(input.id)
     .flatMap { studentService.findById(it.studentId!!) }

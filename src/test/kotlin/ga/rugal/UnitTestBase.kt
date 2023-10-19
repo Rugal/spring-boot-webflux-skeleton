@@ -5,5 +5,4 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.context.junit.jupiter.SpringExtension
 
 @ExtendWith(MockKExtension::class, SpringExtension::class)
-abstract class UnitTestBase {
-}
+abstract class UnitTestBase

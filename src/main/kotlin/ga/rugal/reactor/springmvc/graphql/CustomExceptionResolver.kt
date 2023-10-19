@@ -1,6 +1,6 @@
 package ga.rugal.reactor.springmvc.graphql
 
-import ga.rugal.torrency.raizekusu.springmvc.exception.GraphqlException
+import ga.rugal.reactor.springmvc.exception.GraphqlException
 import graphql.ErrorType
 import graphql.GraphQLError
 import graphql.GraphqlErrorBuilder

@@ -1,4 +1,4 @@
-package ga.rugal.torrency.raizekusu.springmvc.exception
+package ga.rugal.reactor.springmvc.exception
 
 import graphql.ErrorClassification
 import graphql.ErrorType

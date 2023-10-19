@@ -19,11 +19,6 @@ class TagControllerTest : ControllerUnitTestBase() {
 
   private val tag = Tag(1, "Rugal")
 
-  @BeforeEach
-  fun setup() {
-
-  }
-
   @Test
   fun test_found() {
     every { service.findById(any()) } returns Mono.just(tag)

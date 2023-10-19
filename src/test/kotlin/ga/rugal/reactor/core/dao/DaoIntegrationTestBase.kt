@@ -7,5 +7,4 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 // https://medium.com/@BPandey/writing-unit-test-in-reactive-spring-boot-application-32b8878e2f57
 @DataR2dbcTest
 @ExtendWith(SpringExtension::class)
-abstract class DaoIntegrationTestBase {
-}
+abstract class DaoIntegrationTestBase

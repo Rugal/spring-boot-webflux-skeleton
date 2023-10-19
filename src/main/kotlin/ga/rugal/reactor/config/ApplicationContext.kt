@@ -11,7 +11,4 @@ import ga.rugal.reactor.core.dao.PackageInfo as RepositoryPackage
 @Configuration
 @EnableR2dbcRepositories(basePackageClasses = [RepositoryPackage::class])
 @EnableTransactionManagement
-open class ApplicationContext {
-
-}
-
+open class ApplicationContext
