@@ -135,6 +135,9 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+
     <plugins>
       <!-- graphql codegen -->
       <plugin>
@@ -247,21 +250,32 @@
           </execution>
         </executions>
       </plugin>
+      <!-- test coverage -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/exception/*</exclude>
+            <exclude>**/entity/*</exclude>
+            <exclude>**/swagger/**</exclude>
+            <exclude>**/openapi/**</exclude>
+            <exclude>**/mapper/**</exclude>
+            <exclude>**/config/**</exclude>
+            <exclude>ga/rugal/r2dbc/graphql/**</exclude>
+            <exclude>ga/rugal/*.class</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
       <!-- Unit Test -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <argLine>""</argLine>
-        </configuration>
       </plugin>
       <!-- Integration Test -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <argLine>""</argLine>
-        </configuration>
       </plugin>
       <!--
         deploy
