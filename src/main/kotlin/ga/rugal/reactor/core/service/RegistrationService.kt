@@ -25,9 +25,12 @@ class RegistrationService(
 
   fun save(input: NewRegistrationDto): Mono<Registration> {
     return Mono.just(input)
+      .log()
       .flatMap { this.dao.findByStudentIdAndCourseId(it.studentId, it.courseId).hasElement() }
       // ensure the student & course pair is unique
-      .flatMap { if (it) Mono.error(RedundantRegistrationException(input.studentId, input.courseId)) else Mono.just(input) }
+      .flatMap {
+        if (it) Mono.error(RedundantRegistrationException(input.studentId, input.courseId)) else Mono.just(input)
+      }
       .flatMap { studentService.findById(input.studentId) }  // this would emit error
       .flatMap { courseService.findById(input.courseId) }    // this would emit error as well
       .onErrorStop() // should stop right here is any error emit above

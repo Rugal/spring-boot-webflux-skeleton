@@ -2,9 +2,13 @@ package ga.rugal.reactor.springmvc.graphql
 
 import ga.rugal.reactor.core.dao.TagDao
 import ga.rugal.reactor.core.entity.Tag
+import ga.rugal.reactor.core.service.CourseService
+import ga.rugal.reactor.core.service.RegistrationService
+import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -24,6 +28,15 @@ class RootMutationTest {
 
   @MockkBean
   lateinit var dao: TagDao
+
+  @MockkBean
+  lateinit var studentService: StudentService
+
+  @MockkBean
+  lateinit var courseService: CourseService
+
+  @MockkBean
+  lateinit var registrationService: RegistrationService
 
   @MockkBean
   lateinit var service: TagService

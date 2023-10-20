@@ -28,7 +28,7 @@ import reactor.core.publisher.Mono
  */
 @Controller
 class RootMutation(
-  private val userService: TagService,
+  private val tagService: TagService,
   private val studentService: StudentService,
   private val courseService: CourseService,
   private val registrationService: RegistrationService,
@@ -37,7 +37,7 @@ class RootMutation(
 
   override fun createTag(input: NewTagDto, env: DataFetchingEnvironment): Mono<TagDto> = Mono.just(input)
     .map { TagMapper.I.to(it) }
-    .flatMap { userService.tagDao.save(it) }
+    .flatMap { tagService.tagDao.save(it) }
     .map { TagMapper.I.from(it) }
 
   override fun createStudent(input: NewStudentDto, env: DataFetchingEnvironment): Mono<StudentDto> = Mono.just(input)
