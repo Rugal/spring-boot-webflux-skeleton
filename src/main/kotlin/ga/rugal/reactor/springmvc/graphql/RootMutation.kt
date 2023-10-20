@@ -14,10 +14,10 @@ import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
 import ga.rugal.reactor.springmvc.mapper.CourseMapper
+import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
 import ga.rugal.reactor.springmvc.mapper.StudentMapper
 import ga.rugal.reactor.springmvc.mapper.TagMapper
 import graphql.schema.DataFetchingEnvironment
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Controller
 import reactor.core.publisher.Mono
 
@@ -33,8 +33,6 @@ class RootMutation(
   private val courseService: CourseService,
   private val registrationService: RegistrationService,
 ) : MutationResolver {
-  private val LOG = KotlinLogging.logger {}
-
   override fun createTag(input: NewTagDto, env: DataFetchingEnvironment): Mono<TagDto> = Mono.just(input)
     .map { TagMapper.I.to(it) }
     .flatMap { tagService.tagDao.save(it) }
@@ -50,7 +48,6 @@ class RootMutation(
     .flatMap { this.courseService.dao.save(it) }
     .map { CourseMapper.I.from(it) }
 
-  override fun createRegistration(input: NewRegistrationDto?, env: DataFetchingEnvironment?): Mono<RegistrationDto> {
-    TODO("Not yet implemented")
-  }
+  override fun createRegistration(input: NewRegistrationDto, env: DataFetchingEnvironment): Mono<RegistrationDto> =
+    this.registrationService.save(input).map { RegistrationMapper.I.from(it) }
 }

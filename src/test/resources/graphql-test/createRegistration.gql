@@ -1,0 +1,8 @@
+mutation createRegistration($input: NewRegistration!) {
+  createRegistration(input: $input) {
+    id
+    score
+    createAt
+    updateAt
+  }
+}

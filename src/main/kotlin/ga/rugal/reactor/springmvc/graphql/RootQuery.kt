@@ -14,7 +14,6 @@ import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
 import ga.rugal.reactor.springmvc.mapper.StudentMapper
 import ga.rugal.reactor.springmvc.mapper.TagMapper
 import graphql.schema.DataFetchingEnvironment
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Controller
 import reactor.core.publisher.Mono
 
@@ -25,8 +24,6 @@ class RootQuery(
   private val courseService: CourseService,
   private val registrationService: RegistrationService,
 ) : QueryResolver {
-  private val LOG = KotlinLogging.logger {}
-
   override fun getTag(id: Int, env: DataFetchingEnvironment): Mono<TagDto> = this.tagService
     .findById(id)
     .map { TagMapper.I.from(it) }

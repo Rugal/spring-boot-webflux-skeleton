@@ -1,14 +1,16 @@
 package ga.rugal.reactor.springmvc.graphql
 
 import ga.rugal.reactor.core.dao.TagDao
+import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.core.entity.Tag
 import ga.rugal.reactor.core.service.CourseService
 import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
+import ga.rugal.reactor.springmvc.exception.RedundantRegistrationException
 import com.ninjasquad.springmockk.MockkBean
+import graphql.ErrorType
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -46,6 +48,13 @@ class RootMutationTest {
     name = "Rugal",
   )
 
+  private val r = Registration(
+    id = 1,
+    score = 100,
+    studentId = 1,
+    courseId = 1,
+  )
+
   @BeforeEach
   fun setup() {
     every { service.tagDao } returns dao
@@ -63,5 +72,38 @@ class RootMutationTest {
       .path("createTag.updateAt").hasValue()
 
     verify(exactly = 1) { dao.save(any()) }
+  }
+
+  @Test
+  fun createRegistration_good() {
+    every { registrationService.save(any()) } returns Mono.just(r)
+
+    tester.documentName("createRegistration")
+      .variable("input", mapOf("score" to r.score, "studentId" to r.studentId, "courseId" to r.courseId))
+      .execute()
+      .path("createRegistration.id").entity(Int::class.java).isEqualTo(r.id)
+      .path("createRegistration.score").entity(Int::class.java).isEqualTo(r.score!!)
+      .path("createRegistration.createAt").hasValue()
+      .path("createRegistration.updateAt").hasValue()
+
+    verify(exactly = 1) { registrationService.save(any()) }
+  }
+
+  @Test
+  fun createRegistration_bad() {
+    every { registrationService.save(any()) } returns Mono.error {
+      RedundantRegistrationException(
+        r.studentId!!,
+        r.courseId!!
+      )
+    }
+
+    tester.documentName("createRegistration")
+      .variable("input", mapOf("score" to r.score, "studentId" to r.studentId, "courseId" to r.courseId))
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { registrationService.save(any()) }
   }
 }
