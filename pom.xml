@@ -12,7 +12,7 @@
   <artifactId>r2dbc</artifactId>
   <version>1.0.0</version>
 
-  <name>Spring Webflux skeleton</name>
+  <name>Spring Boot Webflux skeleton</name>
 
   <properties>
     <!-- test switch -->
