@@ -12,7 +12,7 @@
   <artifactId>r2dbc</artifactId>
   <version>1.0.0</version>
 
-  <name>R2DBC test</name>
+  <name>Spring Webflux skeleton</name>
 
   <properties>
     <!-- test switch -->
@@ -73,7 +73,6 @@
     <dependency>
       <groupId>com.ninja-squad</groupId>
       <artifactId>springmockk</artifactId>
-      <version>4.0.2</version>
       <scope>test</scope>
     </dependency>
     <!--
