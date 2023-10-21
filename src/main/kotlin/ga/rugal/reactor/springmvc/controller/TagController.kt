@@ -3,7 +3,6 @@ package ga.rugal.reactor.springmvc.controller
 import ga.rugal.reactor.core.entity.Tag
 import ga.rugal.reactor.core.service.TagService
 import ga.rugal.reactor.springmvc.exception.TagNotFoundException
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,8 +14,6 @@ import reactor.core.publisher.Mono
 class TagController(
   @Autowired private val service: TagService
 ) {
-  private val LOG = KotlinLogging.logger {}
-
   @GetMapping("/tag/{id}")
   fun get(@PathVariable id: Int): Mono<ResponseEntity<Tag>> = this.service
     .findById(id)

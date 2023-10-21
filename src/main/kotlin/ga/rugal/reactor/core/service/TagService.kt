@@ -12,8 +12,6 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 class TagService(
   val tagDao: TagDao
 ) {
-  private val LOG = KotlinLogging.logger {}
-
   fun findById(id: Int): Mono<Tag> = this.tagDao
     .findById(id)
     .switchIfEmpty { Mono.error { TagNotFoundException(id) } }

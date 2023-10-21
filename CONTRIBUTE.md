@@ -29,3 +29,9 @@ openssl rsa -in keypair.pem -pubout -out publickey.crt
 ```shell
 openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in keypair.pem -out pkcs8.key
 ```
+
+## test
+
+```shell
+echo '{"operationName":null,"variables":{ "id": 1   },"query":"query getTag($id: Int!) {  getTag(id: $id) { id name}   }"}' | http POST 127.0.0.1:8080/graphql
+```

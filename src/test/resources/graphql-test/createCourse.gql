@@ -1,0 +1,8 @@
+mutation createCourse($input: NewCourse!) {
+  createCourse(input: $input) {
+    id
+    name
+    createAt
+    updateAt
+  }
+}

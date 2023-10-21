@@ -1,7 +1,11 @@
 package ga.rugal.reactor.springmvc.graphql
 
+import ga.rugal.reactor.core.dao.CourseDao
+import ga.rugal.reactor.core.dao.StudentDao
 import ga.rugal.reactor.core.dao.TagDao
+import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.core.entity.Registration
+import ga.rugal.reactor.core.entity.Student
 import ga.rugal.reactor.core.entity.Tag
 import ga.rugal.reactor.core.service.CourseService
 import ga.rugal.reactor.core.service.RegistrationService
@@ -32,7 +36,13 @@ class RootMutationTest {
   lateinit var dao: TagDao
 
   @MockkBean
+  lateinit var studentDao: StudentDao
+
+  @MockkBean
   lateinit var studentService: StudentService
+
+  @MockkBean
+  lateinit var courseDao: CourseDao
 
   @MockkBean
   lateinit var courseService: CourseService
@@ -48,6 +58,16 @@ class RootMutationTest {
     name = "Rugal",
   )
 
+  private val c = Course(
+    id = 1,
+    name = "Rugal",
+  )
+
+  private val s = Student(
+    id = 1,
+    name = "Rugal",
+  )
+
   private val r = Registration(
     id = 1,
     score = 100,
@@ -59,6 +79,12 @@ class RootMutationTest {
   fun setup() {
     every { service.tagDao } returns dao
     every { dao.save(any()) } returns Mono.just(u)
+
+    every { courseService.dao } returns courseDao
+    every { courseDao.save(any()) } returns Mono.just(c)
+
+    every { studentService.dao } returns studentDao
+    every { studentDao.save(any()) } returns Mono.just(s)
   }
 
   @Test
@@ -105,5 +131,31 @@ class RootMutationTest {
       .expect { it.errorType == ErrorType.ValidationError }
 
     verify(exactly = 1) { registrationService.save(any()) }
+  }
+
+  @Test
+  fun createCourse_good() {
+    tester.documentName("createCourse")
+      .variable("input", mapOf("name" to c.name))
+      .execute()
+      .path("createCourse.id").entity(Integer::class.java).isEqualTo(c.id)
+      .path("createCourse.name").entity(String::class.java).isEqualTo(c.name)
+      .path("createCourse.createAt").hasValue()
+      .path("createCourse.updateAt").hasValue()
+
+    verify(exactly = 1) { courseDao.save(any()) }
+  }
+
+  @Test
+  fun createStudent_good() {
+    tester.documentName("createStudent")
+      .variable("input", mapOf("name" to s.name))
+      .execute()
+      .path("createStudent.id").entity(Integer::class.java).isEqualTo(s.id)
+      .path("createStudent.name").entity(String::class.java).isEqualTo(s.name)
+      .path("createStudent.createAt").hasValue()
+      .path("createStudent.updateAt").hasValue()
+
+    verify(exactly = 1) { studentDao.save(any()) }
   }
 }

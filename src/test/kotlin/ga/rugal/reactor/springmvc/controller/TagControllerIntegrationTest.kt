@@ -15,4 +15,13 @@ class TagControllerIntegrationTest : ControllerIntegrationTestBase() {
       .jsonPath("$.name").isEqualTo("BlueRay")
       .jsonPath("$.id").isEqualTo(1)
   }
+
+  @Test
+  fun test_not_found() {
+    this.client
+      .get()
+      .uri("/tag/0")
+      .exchange()
+      .expectStatus().isNotFound
+  }
 }

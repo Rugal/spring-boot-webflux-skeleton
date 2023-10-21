@@ -1,0 +1,8 @@
+mutation createStudent($input: NewStudent!) {
+  createStudent(input: $input) {
+    id
+    name
+    createAt
+    updateAt
+  }
+}
