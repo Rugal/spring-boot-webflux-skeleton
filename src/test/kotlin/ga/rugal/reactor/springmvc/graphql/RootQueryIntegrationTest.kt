@@ -73,4 +73,22 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+
+  @Test
+  fun deleteRegistration_ok() {
+    val id = 10
+    tester.documentName("getRegistration")
+      .variable("id", id)
+      .executeAndVerify()
+
+    tester.documentName("deleteRegistration")
+      .variable("id", id)
+      .executeAndVerify()
+
+    tester.documentName("getRegistration")
+      .variable("id", id)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+  }
 }
