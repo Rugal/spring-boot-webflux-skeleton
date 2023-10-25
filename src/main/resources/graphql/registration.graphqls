@@ -7,6 +7,10 @@ input NewRegistration {
   score: Int
 }
 
+input UpdateRegistration {
+  score: Int!
+}
+
 type Registration {
   id: Int!
   student: Student!
@@ -15,6 +19,6 @@ type Registration {
   createAt: Int!
   updateAt: Int!
 
-  update(input: NewRegistration!): Registration!
+  update(input: UpdateRegistration!): Registration!
   delete: Boolean!
 }

@@ -1,0 +1,8 @@
+query updateRegistration($id: Int!, $input: UpdateRegistration!) {
+  getRegistration(id: $id) {
+    update(input: $input) {
+      id
+      score
+    }
+  }
+}

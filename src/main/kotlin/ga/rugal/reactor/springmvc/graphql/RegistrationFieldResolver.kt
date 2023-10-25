@@ -1,14 +1,15 @@
 package ga.rugal.reactor.springmvc.graphql
 
 import ga.rugal.r2dbc.graphql.CourseDto
-import ga.rugal.r2dbc.graphql.NewRegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationResolver
 import ga.rugal.r2dbc.graphql.StudentDto
+import ga.rugal.r2dbc.graphql.UpdateRegistrationDto
 import ga.rugal.reactor.core.service.CourseService
 import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.springmvc.mapper.CourseMapper
+import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
 import ga.rugal.reactor.springmvc.mapper.StudentMapper
 import graphql.schema.DataFetchingEnvironment
 import org.springframework.stereotype.Controller
@@ -32,12 +33,14 @@ class RegistrationFieldResolver(
     .map { CourseMapper.I.from(it) }
 
   override fun update(
-    registration: RegistrationDto?,
-    input: NewRegistrationDto?,
-    env: DataFetchingEnvironment?
-  ): Mono<RegistrationDto> {
-    TODO("Not yet implemented")
-  }
+    dto: RegistrationDto,
+    input: UpdateRegistrationDto,
+    env: DataFetchingEnvironment
+  ): Mono<RegistrationDto> = this.registrationService.dao
+    .findById(dto.id)
+    .map { it.copy(score = input.score) }
+    .flatMap { this.registrationService.dao.save(it) }
+    .map { RegistrationMapper.I.from(it) }
 
   override fun delete(dto: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> = this.registrationService.dao
     .deleteById(dto.id)

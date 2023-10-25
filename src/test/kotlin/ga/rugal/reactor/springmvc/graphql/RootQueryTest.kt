@@ -200,4 +200,20 @@ class RootQueryTest {
     verify(exactly = 1) { registrationService.findById(any()) }
     verify(exactly = 1) { dao.deleteById(1) }
   }
+
+  @Test
+  fun updateRegistration_ok() {
+    every { dao.findById(r.id) } returns Mono.just(r)
+    every { dao.save(any()) } returns Mono.just(r)
+
+    tester.documentName("updateRegistration")
+      .variable("id", r.id)
+      .variable("input", mapOf("score" to r.score))
+      .execute()
+      .path("getRegistration.update.id").entity(Int::class.java).isEqualTo(r.id)
+      .path("getRegistration.update.score").entity(Int::class.java).isEqualTo(r.score!!)
+
+    verify(exactly = 1) { dao.findById(r.id) }
+    verify(exactly = 1) { dao.save(any()) }
+  }
 }
