@@ -91,4 +91,22 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+
+  @Test
+  fun updateRegistration_ok() {
+    val id = 1
+    val score = 55
+    tester.documentName("getRegistration")
+      .variable("id", id)
+      .execute()
+      .path("getRegistration.id").entity(Int::class.java).isEqualTo(1)
+      .path("getRegistration.score").entity(Int::class.java).isEqualTo(100)
+
+    tester.documentName("updateRegistration")
+      .variable("id", id)
+      .variable("input", mapOf("score" to score))
+      .execute()
+      .path("getRegistration.update.id").entity(Int::class.java).isEqualTo(id)
+      .path("getRegistration.update.score").entity(Int::class.java).isEqualTo(score)
+  }
 }
