@@ -1,0 +1,5 @@
+query deleteCourse($id: Int!) {
+  getCourse(id: $id) {
+    delete
+  }
+}

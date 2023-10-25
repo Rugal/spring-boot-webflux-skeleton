@@ -1,0 +1,8 @@
+query updateStudent($id: Int!, $input: UpdateStudent!) {
+  getStudent(id: $id) {
+    update(input: $input) {
+      id
+      name
+    }
+  }
+}

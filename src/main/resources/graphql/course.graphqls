@@ -5,9 +5,16 @@ input NewCourse {
   name: String!
 }
 
+input UpdateCourse {
+  name: String!
+}
+
 type Course {
   id: Int!
   name: String!
   createAt: Int!
   updateAt: Int!
+
+  delete: Boolean!
+  update(input: UpdateCourse!): Course!
 }

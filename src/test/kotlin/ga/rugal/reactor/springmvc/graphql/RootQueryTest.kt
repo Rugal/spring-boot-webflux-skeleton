@@ -1,6 +1,8 @@
 package ga.rugal.reactor.springmvc.graphql
 
+import ga.rugal.reactor.core.dao.CourseDao
 import ga.rugal.reactor.core.dao.RegistrationDao
+import ga.rugal.reactor.core.dao.StudentDao
 import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.core.entity.Student
@@ -27,7 +29,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import reactor.core.publisher.Mono
 
 @ExtendWith(MockKExtension::class)
-@GraphQlTest(RootQuery::class, RegistrationFieldResolver::class)
+@GraphQlTest(RootQuery::class, RegistrationFieldResolver::class, StudentFieldResolver::class, CourseFieldResolver::class)
 class RootQueryTest {
 
   @Autowired
@@ -43,12 +45,18 @@ class RootQueryTest {
   lateinit var studentService: StudentService
 
   @MockkBean
+  lateinit var registrationService: RegistrationService
+
+  @MockkBean
   lateinit var dao: RegistrationDao
 
   @MockkBean
-  lateinit var registrationService: RegistrationService
+  lateinit var studentDao: StudentDao
 
-  private val u = Tag(
+  @MockkBean
+  lateinit var courseDao: CourseDao
+
+  private val t = Tag(
     id = 1,
     name = "Rugal",
   )
@@ -72,11 +80,14 @@ class RootQueryTest {
 
   @BeforeEach
   fun setup() {
-    every { service.findById(any()) } returns Mono.just(u)
+    every { service.findById(any()) } returns Mono.just(t)
     every { courseService.findById(any()) } returns Mono.just(c)
     every { studentService.findById(any()) } returns Mono.just(s)
     every { registrationService.findById(any()) } returns Mono.just(r)
+
     every { registrationService.dao } returns this.dao
+    every { studentService.dao } returns this.studentDao
+    every { courseService.dao } returns this.courseDao
   }
 
   @Test
@@ -98,15 +109,15 @@ class RootQueryTest {
     tester.documentName("getTag")
       .variable("id", 1)
       .execute()
-      .path("getTag.id").entity(Integer::class.java).isEqualTo(u.id)
-      .path("getTag.name").entity(String::class.java).isEqualTo(u.name)
+      .path("getTag.id").entity(Integer::class.java).isEqualTo(t.id)
+      .path("getTag.name").entity(String::class.java).isEqualTo(t.name)
 
     verify(exactly = 1) { service.findById(any()) }
   }
 
   @Test
   fun getTag_not_found() {
-    every { service.findById(any()) } returns Mono.error { TagNotFoundException(u.id) }
+    every { service.findById(any()) } returns Mono.error { TagNotFoundException(t.id) }
 
     tester.documentName("getTag")
       .variable("id", 1)
@@ -128,7 +139,7 @@ class RootQueryTest {
 
   @Test
   fun getCourse_not_found() {
-    every { courseService.findById(any()) } returns Mono.error { CourseNotFoundException(u.id) }
+    every { courseService.findById(any()) } returns Mono.error { CourseNotFoundException(t.id) }
 
     tester.documentName("getCourse")
       .variable("id", 1)
@@ -150,7 +161,7 @@ class RootQueryTest {
 
   @Test
   fun getStudent_not_found() {
-    every { studentService.findById(any()) } returns Mono.error { StudentNotFoundException(u.id) }
+    every { studentService.findById(any()) } returns Mono.error { StudentNotFoundException(t.id) }
 
     tester.documentName("getStudent")
       .variable("id", 1)
@@ -177,7 +188,7 @@ class RootQueryTest {
 
   @Test
   fun getRegistration_not_found() {
-    every { registrationService.findById(any()) } returns Mono.error { RegistrationNotFoundException(u.id) }
+    every { registrationService.findById(any()) } returns Mono.error { RegistrationNotFoundException(t.id) }
 
     tester.documentName("getRegistration")
       .variable("id", 1)
@@ -215,5 +226,63 @@ class RootQueryTest {
 
     verify(exactly = 1) { dao.findById(r.id) }
     verify(exactly = 1) { dao.save(any()) }
+  }
+
+  @Test
+  fun deleteStudent_ok() {
+    every { studentDao.deleteById(1) } returns Mono.empty()
+
+    tester.documentName("deleteStudent")
+      .variable("id", 1)
+      .execute()
+      .path("getStudent.delete").entity(Boolean::class.java).isEqualTo(true)
+
+    verify(exactly = 1) { studentService.findById(any()) }
+    verify(exactly = 1) { studentDao.deleteById(1) }
+  }
+
+  @Test
+  fun updateStudent_ok() {
+    every { studentDao.findById(r.id) } returns Mono.just(s)
+    every { studentDao.save(any()) } returns Mono.just(s)
+
+    tester.documentName("updateStudent")
+      .variable("id", r.id)
+      .variable("input", mapOf("name" to s.name))
+      .execute()
+      .path("getStudent.update.id").entity(Int::class.java).isEqualTo(r.id)
+      .path("getStudent.update.name").entity(String::class.java).isEqualTo(s.name)
+
+    verify(exactly = 1) { studentDao.findById(s.id) }
+    verify(exactly = 1) { studentDao.save(any()) }
+  }
+
+  @Test
+  fun deleteCourse_ok() {
+    every { courseDao.deleteById(1) } returns Mono.empty()
+
+    tester.documentName("deleteCourse")
+      .variable("id", 1)
+      .execute()
+      .path("getCourse.delete").entity(Boolean::class.java).isEqualTo(true)
+
+    verify(exactly = 1) { courseService.findById(any()) }
+    verify(exactly = 1) { courseDao.deleteById(1) }
+  }
+
+  @Test
+  fun updateCourse_ok() {
+    every { courseDao.findById(r.id) } returns Mono.just(c)
+    every { courseDao.save(any()) } returns Mono.just(c)
+
+    tester.documentName("updateCourse")
+      .variable("id", r.id)
+      .variable("input", mapOf("name" to s.name))
+      .execute()
+      .path("getCourse.update.id").entity(Int::class.java).isEqualTo(r.id)
+      .path("getCourse.update.name").entity(String::class.java).isEqualTo(s.name)
+
+    verify(exactly = 1) { courseDao.findById(s.id) }
+    verify(exactly = 1) { courseDao.save(any()) }
   }
 }
