@@ -1,7 +1,9 @@
 {
   "fieldsWithResolvers": [
+    "Registration.course",
+    "Registration.delete",
     "Registration.student",
-    "Registration.course"
+    "Registration.update"
   ],
   "parametrizedResolverAnnotations": [
     "org.springframework.graphql.data.method.annotation.SchemaMapping(typeName=\"{{TYPE_NAME}}\")"

@@ -1,0 +1,5 @@
+query deleteRegistration($id: Int!) {
+  getRegistration(id: $id) {
+    delete
+  }
+}

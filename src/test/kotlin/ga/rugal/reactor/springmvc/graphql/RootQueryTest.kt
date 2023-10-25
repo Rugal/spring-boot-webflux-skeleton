@@ -1,5 +1,6 @@
 package ga.rugal.reactor.springmvc.graphql
 
+import ga.rugal.reactor.core.dao.RegistrationDao
 import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.core.entity.Student
@@ -42,6 +43,9 @@ class RootQueryTest {
   lateinit var studentService: StudentService
 
   @MockkBean
+  lateinit var dao: RegistrationDao
+
+  @MockkBean
   lateinit var registrationService: RegistrationService
 
   private val u = Tag(
@@ -72,6 +76,7 @@ class RootQueryTest {
     every { courseService.findById(any()) } returns Mono.just(c)
     every { studentService.findById(any()) } returns Mono.just(s)
     every { registrationService.findById(any()) } returns Mono.just(r)
+    every { registrationService.dao } returns this.dao
   }
 
   @Test
@@ -181,5 +186,18 @@ class RootQueryTest {
       .expect { it.errorType == ErrorType.ValidationError }
 
     verify(exactly = 1) { registrationService.findById(any()) }
+  }
+
+  @Test
+  fun deleteRegistration_ok() {
+    every { dao.deleteById(1) } returns Mono.empty()
+
+    tester.documentName("deleteRegistration")
+      .variable("id", 1)
+      .execute()
+      .path("getRegistration.delete").entity(Boolean::class.java).isEqualTo(true)
+
+    verify(exactly = 1) { registrationService.findById(any()) }
+    verify(exactly = 1) { dao.deleteById(1) }
   }
 }

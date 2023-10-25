@@ -1,6 +1,7 @@
 package ga.rugal.reactor.springmvc.graphql
 
 import ga.rugal.r2dbc.graphql.CourseDto
+import ga.rugal.r2dbc.graphql.NewRegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationResolver
 import ga.rugal.r2dbc.graphql.StudentDto
@@ -29,4 +30,16 @@ class RegistrationFieldResolver(
     .findById(input.id)
     .flatMap { courseService.findById(it.studentId!!) }
     .map { CourseMapper.I.from(it) }
+
+  override fun update(
+    registration: RegistrationDto?,
+    input: NewRegistrationDto?,
+    env: DataFetchingEnvironment?
+  ): Mono<RegistrationDto> {
+    TODO("Not yet implemented")
+  }
+
+  override fun delete(dto: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> = this.registrationService.dao
+    .deleteById(dto.id)
+    .thenReturn(true)
 }

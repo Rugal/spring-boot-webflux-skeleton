@@ -14,4 +14,7 @@ type Registration {
   score: Int
   createAt: Int!
   updateAt: Int!
+
+  update(input: NewRegistration!): Registration!
+  delete: Boolean!
 }
