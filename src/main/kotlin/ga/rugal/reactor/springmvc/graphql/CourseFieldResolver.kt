@@ -13,8 +13,8 @@ import reactor.core.publisher.Mono
 class CourseFieldResolver(private val courseService: CourseService) : CourseResolver {
 
   override fun delete(dto: CourseDto, env: DataFetchingEnvironment): Mono<Boolean> = this.courseService.dao
-    .deleteById(dto.id)
-    .thenReturn(true)
+  .deleteById(dto.id)
+  .thenReturn(true)
 
   override fun update(dto: CourseDto, input: UpdateCourseDto, env: DataFetchingEnvironment): Mono<CourseDto> = this.courseService.dao
     .findById(dto.id)
