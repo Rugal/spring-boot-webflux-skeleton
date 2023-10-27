@@ -17,15 +17,15 @@ class CourseService(
     .findById(id)
     .switchIfEmpty { Mono.error { CourseNotFoundException(id) } }
 
-  fun deleteById(id: Int): Mono<Boolean> {
-    // check any existing registration is under this course
-    this.registrationService.dao
-      .existsByCourseId(id)
-      // unable to delete if true
-      .filter { it == false }
-      .switchIfEmpty { Mono.error(CourseReferenceException(id)) }
-      .onErrorStop()
-      .map { this.dao.deleteById(id) }
-      .thenReturn(true)
-  }
+  /**
+   * check any existing registration is under this course before deleting it.
+   */
+  fun deleteById(id: Int): Mono<Boolean> = this.registrationService.dao
+    .existsByCourseId(id)
+    // unable to delete if true
+    .filter { it == false }
+    .switchIfEmpty { Mono.error(CourseReferenceException(id)) }
+    .onErrorStop()
+    .map { this.dao.deleteById(id) }
+    .thenReturn(true)
 }

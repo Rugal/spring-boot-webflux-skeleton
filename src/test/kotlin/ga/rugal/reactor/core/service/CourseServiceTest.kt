@@ -2,13 +2,16 @@ package ga.rugal.reactor.core.service
 
 import ga.rugal.UnitTestBase
 import ga.rugal.reactor.core.dao.CourseDao
+import ga.rugal.reactor.core.dao.RegistrationDao
 import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
+import ga.rugal.reactor.springmvc.exception.CourseReferenceException
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
@@ -18,6 +21,12 @@ class CourseServiceTest : UnitTestBase() {
   @MockK
   lateinit var dao: CourseDao
 
+  @MockK
+  lateinit var registrationDao: RegistrationDao
+
+  @MockK
+  lateinit var registrationService: RegistrationService
+
   @InjectMockKs
   lateinit var service: CourseService
 
@@ -25,6 +34,11 @@ class CourseServiceTest : UnitTestBase() {
     id = 1,
     name = "Rugal",
   )
+
+  @BeforeEach
+  fun setup() {
+    every { registrationService.dao } returns this.registrationDao
+  }
 
   @Test
   fun test_one() {
@@ -52,5 +66,35 @@ class CourseServiceTest : UnitTestBase() {
       .verify()
 
     verify(exactly = 1) { dao.findById(1) }
+  }
+
+  @Test
+  fun deleteById_ok() {
+    every { registrationDao.existsByCourseId(any()) } returns Mono.just(false)
+    every { dao.deleteById(1) } returns Mono.empty()
+
+    val result = this.service.deleteById(1)
+
+    StepVerifier
+      .create(result)
+      .expectNextMatches { it == true }
+      .verifyComplete()
+
+    verify(exactly = 1) { registrationDao.existsByCourseId(any()) }
+    verify(exactly = 1) { dao.deleteById(1) }
+  }
+
+  @Test
+  fun deleteById_error() {
+    every { registrationDao.existsByCourseId(any()) } returns Mono.just(true)
+
+    val result = this.service.deleteById(1)
+
+    StepVerifier
+      .create(result)
+      .expectError(CourseReferenceException::class.java)
+      .verify()
+
+    verify(exactly = 1) { registrationDao.existsByCourseId(any()) }
   }
 }
