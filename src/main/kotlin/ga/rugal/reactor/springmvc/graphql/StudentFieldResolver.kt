@@ -12,13 +12,13 @@ import reactor.core.publisher.Mono
 @Controller
 class StudentFieldResolver(private val studentService: StudentService) : StudentResolver {
 
-  override fun delete(dto: StudentDto, env: DataFetchingEnvironment): Mono<Boolean> = this.studentService.dao
+  override fun delete(dto: StudentDto, env: DataFetchingEnvironment): Mono<Boolean> = this.studentService
     .deleteById(dto.id)
-    .thenReturn(true)
 
-  override fun update(dto: StudentDto, input: UpdateStudentDto, env: DataFetchingEnvironment): Mono<StudentDto> = this.studentService.dao
-    .findById(dto.id)
-    .map { it.copy(name = input.name) }
-    .flatMap { this.studentService.dao.save(it) }
-    .map { StudentMapper.I.from(it) }
+  override fun update(dto: StudentDto, input: UpdateStudentDto, env: DataFetchingEnvironment): Mono<StudentDto> =
+    this.studentService.dao
+      .findById(dto.id)
+      .map { it.copy(name = input.name) }
+      .flatMap { this.studentService.dao.save(it) }
+      .map { StudentMapper.I.from(it) }
 }

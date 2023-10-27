@@ -12,8 +12,10 @@ import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
 import ga.rugal.reactor.core.service.TagService
 import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
+import ga.rugal.reactor.springmvc.exception.CourseReferenceException
 import ga.rugal.reactor.springmvc.exception.RegistrationNotFoundException
 import ga.rugal.reactor.springmvc.exception.StudentNotFoundException
+import ga.rugal.reactor.springmvc.exception.StudentReferenceException
 import ga.rugal.reactor.springmvc.exception.TagNotFoundException
 import com.ninjasquad.springmockk.MockkBean
 import graphql.ErrorType
@@ -230,15 +232,27 @@ class RootQueryTest {
 
   @Test
   fun deleteStudent_ok() {
-    every { studentDao.deleteById(1) } returns Mono.empty()
+    every { studentService.deleteById(any()) } returns Mono.just(true)
 
     tester.documentName("deleteStudent")
       .variable("id", 1)
       .execute()
       .path("getStudent.delete").entity(Boolean::class.java).isEqualTo(true)
 
-    verify(exactly = 1) { studentService.findById(any()) }
-    verify(exactly = 1) { studentDao.deleteById(1) }
+    verify(exactly = 1) { studentService.deleteById(any()) }
+  }
+
+  @Test
+  fun deleteStudent_error() {
+    every { studentService.deleteById(any()) } returns Mono.error(StudentReferenceException(1))
+
+    tester.documentName("deleteStudent")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { studentService.deleteById(any()) }
   }
 
   @Test
@@ -259,15 +273,27 @@ class RootQueryTest {
 
   @Test
   fun deleteCourse_ok() {
-    every { courseDao.deleteById(1) } returns Mono.empty()
+    every { courseService.deleteById(any()) } returns Mono.just(true)
 
     tester.documentName("deleteCourse")
       .variable("id", 1)
       .execute()
       .path("getCourse.delete").entity(Boolean::class.java).isEqualTo(true)
 
-    verify(exactly = 1) { courseService.findById(any()) }
-    verify(exactly = 1) { courseDao.deleteById(1) }
+    verify(exactly = 1) { courseService.deleteById(any()) }
+  }
+
+  @Test
+  fun deleteCourse_error() {
+    every { courseService.deleteById(any()) } returns Mono.error(CourseReferenceException(1))
+
+    tester.documentName("deleteCourse")
+      .variable("id", 1)
+      .execute()
+      .errors()
+      .expect { it.errorType == ErrorType.ValidationError }
+
+    verify(exactly = 1) { courseService.deleteById(any()) }
   }
 
   @Test

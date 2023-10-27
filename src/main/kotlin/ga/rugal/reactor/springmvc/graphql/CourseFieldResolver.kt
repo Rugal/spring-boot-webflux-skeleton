@@ -10,15 +10,15 @@ import org.springframework.stereotype.Controller
 import reactor.core.publisher.Mono
 
 @Controller
-class CourseFieldResolver(private val courseService: CourseService) : CourseResolver {
+  class CourseFieldResolver(private val courseService: CourseService) : CourseResolver {
 
-  override fun delete(dto: CourseDto, env: DataFetchingEnvironment): Mono<Boolean> = this.courseService.dao
-  .deleteById(dto.id)
-  .thenReturn(true)
+  override fun delete(dto: CourseDto, env: DataFetchingEnvironment): Mono<Boolean> = this.courseService
+    .deleteById(dto.id)
 
-  override fun update(dto: CourseDto, input: UpdateCourseDto, env: DataFetchingEnvironment): Mono<CourseDto> = this.courseService.dao
-    .findById(dto.id)
-    .map { it.copy(name = input.name) }
-    .flatMap { this.courseService.dao.save(it) }
-    .map { CourseMapper.I.from(it) }
+  override fun update(dto: CourseDto, input: UpdateCourseDto, env: DataFetchingEnvironment): Mono<CourseDto> =
+    this.courseService.dao
+      .findById(dto.id)
+      .map { it.copy(name = input.name) }
+      .flatMap { this.courseService.dao.save(it) }
+      .map { CourseMapper.I.from(it) }
 }
