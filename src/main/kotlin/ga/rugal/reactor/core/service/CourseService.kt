@@ -18,7 +18,7 @@ class CourseService(
     .switchIfEmpty { Mono.error { CourseNotFoundException(id) } }
 
   /**
-   * check any existing registration is under this course before deleting it.
+   * check any existing registration is under this entity before deleting it.
    */
   fun deleteById(id: Int): Mono<Boolean> = this.registrationService.dao
     .existsByCourseId(id)
