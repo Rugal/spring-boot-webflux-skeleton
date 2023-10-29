@@ -24,6 +24,9 @@ class StudentServiceTest : UnitTestBase() {
   @MockK
   lateinit var registrationDao: RegistrationDao
 
+  @MockK
+  lateinit var registrationService: RegistrationService
+
   @InjectMockKs
   lateinit var service: StudentService
 
@@ -34,6 +37,7 @@ class StudentServiceTest : UnitTestBase() {
 
   @BeforeEach
   fun setup() {
+    every { registrationService.dao } returns registrationDao
   }
 
   @Test
