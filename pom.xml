@@ -21,6 +21,7 @@
     <!--
       dependency
     -->
+    <flyway.version>9.22.2</flyway.version>
     <!--
       plugin
     -->
@@ -100,6 +101,17 @@
     <dependency>
       <groupId>org.springframework.graphql</groupId>
       <artifactId>spring-graphql</artifactId>
+    </dependency>
+    <!-- flyway -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.224</version>
+      <optional>true</optional>
     </dependency>
     <!-- r2dbc -->
     <dependency>

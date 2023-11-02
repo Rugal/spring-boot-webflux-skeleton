@@ -4,10 +4,11 @@
 # This is for local development only, shall not use otherwise
 # Database
 spring:
+  flyway:
+#    url: jdbc:h2:mem:h2db
+    url: jdbc:h2:file:./h2db
+    locations: classpath:flyway/migration/{vendor}
+
   r2dbc:
-    url: r2dbc:h2:mem:///h2db
-#    url: r2dbc:postgresql://127.0.0.1:5432/postgres
-#    properties:
-#      schema: valstrax
-#    username: postgres
-#    password: 123
+#    url: r2dbc:h2:mem:///h2db
+    url: r2dbc:h2:file:///./h2db
