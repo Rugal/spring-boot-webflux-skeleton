@@ -7,7 +7,6 @@ spring:
   flyway:
 #    url: jdbc:h2:mem:h2db
     url: jdbc:h2:file:./h2db
-    locations: classpath:flyway/migration/{vendor}
 
   r2dbc:
 #    url: r2dbc:h2:mem:///h2db

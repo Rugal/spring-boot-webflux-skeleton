@@ -9,6 +9,8 @@ spring:
   profiles:
     #default profile, this can be overriden by environmental variable
      active: default
+  flyway:
+    locations: classpath:flyway/migration/{vendor}
   r2dbc:
     pool:
       enabled: true
