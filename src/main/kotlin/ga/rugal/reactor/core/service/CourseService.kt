@@ -26,7 +26,6 @@ class CourseService(
     // unable to delete if true
     .filter { it == false }
     .switchIfEmpty { Mono.error(CourseReferenceException(id)) }
-    .onErrorStop()
     .map { this.dao.deleteById(id) }
     .thenReturn(true)
 }

@@ -6,6 +6,8 @@ import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
 import ga.rugal.reactor.springmvc.exception.RedundantRegistrationException
 import ga.rugal.reactor.springmvc.exception.StudentNotFoundException
+import org.flywaydb.core.Flyway
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import reactor.test.StepVerifier

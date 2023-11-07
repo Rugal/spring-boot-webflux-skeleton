@@ -28,7 +28,6 @@ class RegistrationService(
     }
     .flatMap { studentService.findById(input.studentId) }  // this would emit error
     .flatMap { courseService.findById(input.courseId) }    // this would emit error as well
-    .onErrorStop() // should stop right here is any error emit above
     .flatMap { Mono.just(input) } // definitely not elegant
     .map { RegistrationMapper.I.to(it) }
     .flatMap { dao.save(it) }

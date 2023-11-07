@@ -36,8 +36,9 @@ class CourseServiceTest : UnitTestBase() {
   fun setup() {
   }
 
+  //<editor-fold defaultstate="collapsed" desc="findById">
   @Test
-  fun test_one() {
+  fun findById_ok() {
     every { dao.findById(1) } returns Mono.just(u)
 
     val result = this.service.findById(1)
@@ -51,7 +52,7 @@ class CourseServiceTest : UnitTestBase() {
   }
 
   @Test
-  fun test_error() {
+  fun findById_error() {
     every { dao.findById(1) } returns Mono.empty()
 
     val result = this.service.findById(1)
@@ -63,7 +64,9 @@ class CourseServiceTest : UnitTestBase() {
 
     verify(exactly = 1) { dao.findById(1) }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="deleteById">
   @Test
   fun deleteById_ok() {
     every { registrationDao.existsByCourseId(any()) } returns Mono.just(false)
@@ -93,4 +96,5 @@ class CourseServiceTest : UnitTestBase() {
 
     verify(exactly = 1) { registrationDao.existsByCourseId(any()) }
   }
+  //</editor-fold>
 }
