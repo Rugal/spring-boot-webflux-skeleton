@@ -17,10 +17,8 @@ data class Registration(
 
   val score: Int? = null,
 
-  @Column(name = "create_at")
   var createAt: Long = Instant.now().epochSecond,
 
-  @Column(name = "update_at")
   var updateAt: Long = Instant.now().epochSecond,
 ) {
 

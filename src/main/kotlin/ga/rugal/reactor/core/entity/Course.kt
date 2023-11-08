@@ -12,11 +12,9 @@ data class Course(
   @Id val id: Int,
 
   val name: String,
-
-  @Column(name = "create_at")
+  
   var createAt: Long = Instant.now().epochSecond,
 
-  @Column(name = "update_at")
   var updateAt: Long = Instant.now().epochSecond,
 ) {
 
