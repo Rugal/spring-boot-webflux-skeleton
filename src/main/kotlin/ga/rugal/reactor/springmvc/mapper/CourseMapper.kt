@@ -14,7 +14,6 @@ import org.mapstruct.factory.Mappers
  */
 @Mapper(
   config = CentralConfig::class,
-  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
 )
 interface CourseMapper {
   fun from(u: Course): CourseDto

@@ -7,12 +7,12 @@ import jakarta.persistence.PreUpdate
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
-@Table(name = "course")
+@Table
 data class Course(
   @Id val id: Int,
 
   val name: String,
-  
+
   var createAt: Long = Instant.now().epochSecond,
 
   var updateAt: Long = Instant.now().epochSecond,

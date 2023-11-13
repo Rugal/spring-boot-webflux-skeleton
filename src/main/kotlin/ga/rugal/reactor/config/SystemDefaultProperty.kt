@@ -7,5 +7,5 @@ package ga.rugal.reactor.config
  */
 object SystemDefaultProperty {
   const val ENCODING = "UTF-8"
-  const val SCHEMA = "valstrax"
+  const val SCHEMA = "public"
 }

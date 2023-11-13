@@ -7,7 +7,7 @@ import jakarta.persistence.PreUpdate
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 
-@Table(name = "student")
+@Table
 data class Student(
   @Id val id: Int,
 
