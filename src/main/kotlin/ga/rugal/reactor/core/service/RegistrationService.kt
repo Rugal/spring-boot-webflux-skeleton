@@ -7,6 +7,7 @@ import ga.rugal.reactor.springmvc.exception.RedundantRegistrationException
 import ga.rugal.reactor.springmvc.exception.RegistrationNotFoundException
 import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 
@@ -20,17 +21,29 @@ class RegistrationService(
     .findById(id)
     .switchIfEmpty { Mono.error { RegistrationNotFoundException(id) } }
 
-  fun save(input: NewRegistrationDto): Mono<Registration> = Mono.just(input)
-    .flatMap { this.dao.findByStudentIdAndCourseId(it.studentId, it.courseId).hasElement() }
-    // ensure the student & course pair is unique
-    .flatMap {
-      if (it) Mono.error(RedundantRegistrationException(input.studentId, input.courseId)) else Mono.just(input)
-    }
-    .flatMap { studentService.findById(input.studentId) }  // this would emit error
-    .flatMap { courseService.findById(input.courseId) }    // this would emit error as well
-    .flatMap { Mono.just(input) } // definitely not elegant
-    .map { RegistrationMapper.I.to(it) }
-    .flatMap { dao.save(it) }
+  /**
+   * 1. there is no existing registration
+   * 2. course exist
+   * 3. student exist
+   * 4. save it
+   * 5. return persisted registration
+   */
+  fun save(input: NewRegistrationDto): Mono<Registration> {
+    fun notExistsByStudentAndCourse(studentId: Int, courseId: Int): Mono<Boolean> =
+      this.dao.findByStudentIdAndCourseId(studentId, courseId).hasElement().map { !it }
+
+    return Flux
+      .merge(
+        notExistsByStudentAndCourse(input.studentId, input.courseId), // return true/false
+        studentService.findById(input.studentId).hasElement(), // will emit error if wrong
+        courseService.findById(input.courseId).hasElement(),   // will emit error if wrong
+      )
+      .reduce { t, u -> t && u }
+      .filter { it } // either true or some error
+      .switchIfEmpty { Mono.error(RedundantRegistrationException(input.studentId, input.courseId)) }
+      .map { RegistrationMapper.I.to(input) }
+      .flatMap { dao.save(it) }
+  }
 
   fun deleteById(id: Int): Mono<Boolean> = this.dao.findById(id)
     .doOnNext { this.dao.deleteById(id) }

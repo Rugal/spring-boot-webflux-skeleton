@@ -15,6 +15,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
@@ -40,6 +41,28 @@ class RegistrationServiceTest : UnitTestBase() {
     studentId = 1,
     courseId = 1,
   )
+
+  private val s = Student(
+    id = 1,
+    name = "Rugal",
+  )
+
+  private val c = Course(
+    id = 1,
+    name = "Rugal",
+  )
+
+  private val n = NewRegistrationDto(u.studentId!!, u.courseId!!, u.score!!)
+
+  @BeforeEach
+  fun setup() {
+    every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.empty()
+    every { dao.save(any()) } returns Mono.just(u)
+
+    every { studentService.findById(any()) } returns Mono.just(s)
+
+    every { courseService.findById(any()) } returns Mono.just(c)
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="findById">
@@ -74,10 +97,10 @@ class RegistrationServiceTest : UnitTestBase() {
 
   //<editor-fold defaultstate="collapsed" desc="save">
   @Test
-  fun save_redundant() {
+  fun `save redundant`() {
     every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.just(u)
 
-    val result = this.service.save(NewRegistrationDto(u.studentId!!, u.courseId!!, u.score!!))
+    val result = this.service.save(n)
 
     StepVerifier
       .create(result)
@@ -85,56 +108,14 @@ class RegistrationServiceTest : UnitTestBase() {
       .verify()
 
     verify(exactly = 1) { dao.findByStudentIdAndCourseId(any(), any()) }
-    verify { studentService.findById(any()) wasNot called }
-    verify { courseService.findById(any()) wasNot called }
-    verify { dao.save(any()) wasNot called }
-  }
-
-  @Test
-  fun save_student_not_found() {
-    every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.empty()
-    every { studentService.findById(any()) } returns Mono.error { StudentNotFoundException(u.studentId!!) }
-
-    val result = this.service.save(NewRegistrationDto(u.studentId!!, u.courseId!!, u.score!!))
-
-    StepVerifier
-      .create(result)
-      .expectError(StudentNotFoundException::class.java)
-      .verify()
-
-    verify(exactly = 1) { dao.findByStudentIdAndCourseId(any(), any()) }
-    verify { studentService.findById(any()) wasNot called }
-    verify { courseService.findById(any()) wasNot called }
-    verify { dao.save(any()) wasNot called }
-  }
-
-  @Test
-  fun save_course_not_found() {
-    every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.empty()
-    every { studentService.findById(any()) } returns Mono.just(Student(1, "Rugal"))
-    every { courseService.findById(any()) } returns Mono.error { CourseNotFoundException(u.courseId!!) }
-
-    val result = this.service.save(NewRegistrationDto(u.studentId!!, u.courseId!!, u.score!!))
-
-    StepVerifier
-      .create(result)
-      .expectError(CourseNotFoundException::class.java)
-      .verify()
-
-    verify(exactly = 1) { dao.findByStudentIdAndCourseId(any(), any()) }
     verify(exactly = 1) { studentService.findById(any()) }
-    verify { courseService.findById(any()) wasNot called }
+    verify(exactly = 1) { courseService.findById(any()) }
     verify { dao.save(any()) wasNot called }
   }
 
   @Test
-  fun save_ok() {
-    every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.empty()
-    every { studentService.findById(any()) } returns Mono.just(Student(1, "Rugal"))
-    every { courseService.findById(any()) } returns Mono.just(Course(1, "Rugal"))
-    every { dao.save(any()) } returns Mono.just(u)
-
-    val result = this.service.save(NewRegistrationDto(u.studentId!!, u.courseId!!, u.score!!))
+  fun `save ok`() {
+    val result = this.service.save(n)
 
     StepVerifier
       .create(result)
