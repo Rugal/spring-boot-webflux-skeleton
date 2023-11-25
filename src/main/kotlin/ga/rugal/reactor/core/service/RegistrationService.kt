@@ -31,4 +31,8 @@ class RegistrationService(
     .flatMap { Mono.just(input) } // definitely not elegant
     .map { RegistrationMapper.I.to(it) }
     .flatMap { dao.save(it) }
+
+  fun deleteById(id: Int): Mono<Boolean> = this.dao.findById(id)
+    .doOnNext { this.dao.deleteById(id) }
+    .hasElement()
 }

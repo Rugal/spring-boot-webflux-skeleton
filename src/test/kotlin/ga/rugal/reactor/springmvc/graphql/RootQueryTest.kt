@@ -19,6 +19,7 @@ import ga.rugal.reactor.springmvc.exception.StudentReferenceException
 import ga.rugal.reactor.springmvc.exception.TagNotFoundException
 import com.ninjasquad.springmockk.MockkBean
 import graphql.ErrorType
+import io.mockk.called
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
@@ -31,9 +32,15 @@ import org.springframework.graphql.test.tester.GraphQlTester
 import reactor.core.publisher.Mono
 
 @ExtendWith(MockKExtension::class)
-@GraphQlTest(RootQuery::class, RegistrationFieldResolver::class, StudentFieldResolver::class, CourseFieldResolver::class)
+@GraphQlTest(
+  RootQuery::class,
+  RegistrationFieldResolver::class,
+  StudentFieldResolver::class,
+  CourseFieldResolver::class
+)
 class RootQueryTest {
 
+  //<editor-fold defaultstate="collapsed" desc="setup">
   @Autowired
   lateinit var tester: GraphQlTester
 
@@ -91,7 +98,9 @@ class RootQueryTest {
     every { studentService.dao } returns this.studentDao
     every { courseService.dao } returns this.courseDao
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getTag">
   @Test
   fun getTag_other_exception() {
     every { service.findById(any()) } returns Mono.error { NullPointerException(s.name) }
@@ -129,7 +138,9 @@ class RootQueryTest {
 
     verify(exactly = 1) { service.findById(any()) }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getCourse">
   @Test
   fun getCourse_found() {
     tester.documentName("getCourse")
@@ -151,7 +162,9 @@ class RootQueryTest {
 
     verify(exactly = 1) { courseService.findById(any()) }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getStudent">
   @Test
   fun getStudent_found() {
     tester.documentName("getStudent")
@@ -173,7 +186,9 @@ class RootQueryTest {
 
     verify(exactly = 1) { studentService.findById(any()) }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getRegistration">
   @Test
   fun getRegistration_found() {
     tester.documentName("getRegistration")
@@ -200,10 +215,11 @@ class RootQueryTest {
 
     verify(exactly = 1) { registrationService.findById(any()) }
   }
+  //</editor-fold>
 
   @Test
   fun deleteRegistration_ok() {
-    every { dao.deleteById(1) } returns Mono.empty()
+    every { registrationService.deleteById(1) } returns Mono.just(true)
 
     tester.documentName("deleteRegistration")
       .variable("id", 1)
@@ -211,7 +227,7 @@ class RootQueryTest {
       .path("getRegistration.delete").entity(Boolean::class.java).isEqualTo(true)
 
     verify(exactly = 1) { registrationService.findById(any()) }
-    verify(exactly = 1) { dao.deleteById(1) }
+    verify { dao.deleteById(1) wasNot called }
   }
 
   @Test
@@ -230,6 +246,7 @@ class RootQueryTest {
     verify(exactly = 1) { dao.save(any()) }
   }
 
+  //<editor-fold defaultstate="collapsed" desc="deleteStudent">
   @Test
   fun deleteStudent_ok() {
     every { studentService.deleteById(any()) } returns Mono.just(true)
@@ -254,6 +271,7 @@ class RootQueryTest {
 
     verify(exactly = 1) { studentService.deleteById(any()) }
   }
+  //</editor-fold>
 
   @Test
   fun updateStudent_ok() {
@@ -271,6 +289,7 @@ class RootQueryTest {
     verify(exactly = 1) { studentDao.save(any()) }
   }
 
+  //<editor-fold defaultstate="collapsed" desc="deleteCourse">
   @Test
   fun deleteCourse_ok() {
     every { courseService.deleteById(any()) } returns Mono.just(true)
@@ -295,6 +314,7 @@ class RootQueryTest {
 
     verify(exactly = 1) { courseService.deleteById(any()) }
   }
+  //</editor-fold>
 
   @Test
   fun updateCourse_ok() {

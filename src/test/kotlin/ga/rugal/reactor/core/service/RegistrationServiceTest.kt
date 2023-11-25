@@ -21,6 +21,7 @@ import reactor.test.StepVerifier
 
 class RegistrationServiceTest : UnitTestBase() {
 
+  //<editor-fold defaultstate="collapsed" desc="setup">
   @MockK
   lateinit var dao: RegistrationDao
 
@@ -39,9 +40,11 @@ class RegistrationServiceTest : UnitTestBase() {
     studentId = 1,
     courseId = 1,
   )
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="findById">
   @Test
-  fun test_one() {
+  fun findById_one() {
     every { dao.findById(1) } returns Mono.just(u)
 
     val result = this.service.findById(1)
@@ -55,7 +58,7 @@ class RegistrationServiceTest : UnitTestBase() {
   }
 
   @Test
-  fun test_error() {
+  fun findById_error() {
     every { dao.findById(1) } returns Mono.empty()
 
     val result = this.service.findById(1)
@@ -67,7 +70,9 @@ class RegistrationServiceTest : UnitTestBase() {
 
     verify(exactly = 1) { dao.findById(1) }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="save">
   @Test
   fun save_redundant() {
     every { dao.findByStudentIdAndCourseId(any(), any()) } returns Mono.just(u)
@@ -141,4 +146,34 @@ class RegistrationServiceTest : UnitTestBase() {
     verify(exactly = 1) { courseService.findById(any()) }
     verify(exactly = 1) { dao.save(any()) }
   }
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="deleteById">
+  @Test
+  fun `deleteById not found`() {
+    every { dao.findById(u.id) } returns Mono.empty()
+
+    StepVerifier
+      .create(this.service.deleteById(u.id))
+      .expectNextMatches { it == false }
+      .verifyComplete()
+
+    verify(exactly = 1) { dao.findById(u.id) }
+    verify { dao.deleteById(u.id) wasNot called }
+  }
+
+  @Test
+  fun `deleteById found`() {
+    every { dao.findById(u.id) } returns Mono.just(u)
+    every { dao.deleteById(u.id) } returns Mono.empty()
+
+    StepVerifier
+      .create(this.service.deleteById(u.id))
+      .expectNextMatches { it == true }
+      .verifyComplete()
+
+    verify(exactly = 1) { dao.findById(u.id) }
+    verify(exactly = 1) { dao.deleteById(u.id) }
+  }
+  //</editor-fold>
 }

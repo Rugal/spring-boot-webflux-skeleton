@@ -42,7 +42,6 @@ class RegistrationFieldResolver(
     .flatMap { this.registrationService.dao.save(it) }
     .map { RegistrationMapper.I.from(it) }
 
-  override fun delete(dto: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> = this.registrationService.dao
-    .deleteById(dto.id)
-    .thenReturn(true)
+  override fun delete(dto: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> =
+    this.registrationService.deleteById(dto.id)
 }

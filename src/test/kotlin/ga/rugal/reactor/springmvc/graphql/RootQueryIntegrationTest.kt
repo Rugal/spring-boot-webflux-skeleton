@@ -10,6 +10,7 @@ import org.springframework.graphql.test.tester.GraphQlTester
 @AutoConfigureHttpGraphQlTester
 class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : IntegrationTestBase() {
 
+  //<editor-fold defaultstate="collapsed" desc="getTag">
   @Test
   fun getTag_found() {
     tester.documentName("getTag")
@@ -25,7 +26,9 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getStudent">
   @Test
   fun getStudent_found() {
     tester.documentName("getStudent")
@@ -41,7 +44,12 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="findByPeerId 2">
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="getCourse">
   @Test
   fun getCourse_found() {
     tester.documentName("getCourse")
@@ -57,7 +65,9 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+  //</editor-fold>
 
+  //<editor-fold defaultstate="collapsed" desc="getRegistration">
   @Test
   fun getRegistration_found() {
     tester.documentName("getRegistration")
@@ -73,6 +83,7 @@ class RootQueryIntegrationTest(@Autowired val tester: GraphQlTester) : Integrati
       .errors()
       .expect { it.errorType == ErrorType.ValidationError }
   }
+  //</editor-fold>
 
   @Test
   fun deleteRegistration_ok() {
