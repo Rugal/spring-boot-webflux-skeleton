@@ -1,7 +1,6 @@
 package ga.rugal.reactor.core.entity
 
 import java.time.Instant
-import jakarta.persistence.Column
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import org.springframework.data.annotation.Id
@@ -13,9 +12,9 @@ data class Student(
 
   val name: String,
 
-  var createAt: Long = Instant.now().epochSecond,
+  var createAt: Long? = Instant.now().epochSecond,
 
-  var updateAt: Long = Instant.now().epochSecond,
+  var updateAt: Long? = Instant.now().epochSecond,
 ) {
 
   @PrePersist

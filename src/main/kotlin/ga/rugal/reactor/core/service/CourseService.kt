@@ -1,10 +1,10 @@
 package ga.rugal.reactor.core.service
 
 import ga.rugal.reactor.core.dao.CourseDao
+import ga.rugal.reactor.core.dao.RegistrationDao
 import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
 import ga.rugal.reactor.springmvc.exception.CourseReferenceException
-import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -12,7 +12,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 @Service
 class CourseService(
   val dao: CourseDao,
-  @Lazy private val registrationService: RegistrationService,
+  private val registrationDao: RegistrationDao,
 ) {
   fun findById(id: Int): Mono<Course> = this.dao
     .findById(id)
@@ -21,7 +21,7 @@ class CourseService(
   /**
    * check any existing registration is under this entity before deleting it.
    */
-  fun deleteById(id: Int): Mono<Boolean> = this.registrationService.dao
+  fun deleteById(id: Int): Mono<Boolean> = this.registrationDao
     .findByCourseId(id)
     .hasElements()
     // unable to delete if true

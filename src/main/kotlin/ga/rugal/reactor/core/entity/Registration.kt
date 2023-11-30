@@ -11,9 +11,9 @@ import org.springframework.data.relational.core.mapping.Table
 data class Registration(
   @Id val id: Int,
 
-  val studentId: Int? = null,
+  val studentId: Int,
 
-  val courseId: Int? = null,
+  val courseId: Int,
 
   val score: Int? = null,
 
