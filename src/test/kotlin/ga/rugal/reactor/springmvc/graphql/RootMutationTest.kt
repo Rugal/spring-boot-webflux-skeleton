@@ -77,7 +77,7 @@ class RootMutationTest {
 
   @BeforeEach
   fun setup() {
-    every { service.tagDao } returns dao
+    every { service.dao } returns dao
     every { dao.save(any()) } returns Mono.just(u)
 
     every { courseService.dao } returns courseDao

@@ -12,8 +12,4 @@ interface RegistrationDao : ReactiveCrudRepository<Registration, Int> {
   fun findByCourseId(id: Int): Flux<Registration>
 
   fun findByStudentIdAndCourseId(studentId: Int, courseId: Int): Mono<Registration>
-
-  fun existsByCourseId(id: Int): Mono<Boolean>
-
-  fun existsByStudentId(id: Int): Mono<Boolean>
 }

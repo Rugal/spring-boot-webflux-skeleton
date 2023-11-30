@@ -35,7 +35,7 @@ class RootMutation(
 ) : MutationResolver {
   override fun createTag(input: NewTagDto, env: DataFetchingEnvironment): Mono<TagDto> = Mono.just(input)
     .map { TagMapper.I.to(it) }
-    .flatMap { tagService.tagDao.save(it) }
+    .flatMap { tagService.dao.save(it) }
     .map { TagMapper.I.from(it) }
 
   override fun createStudent(input: NewStudentDto, env: DataFetchingEnvironment): Mono<StudentDto> = Mono.just(input)

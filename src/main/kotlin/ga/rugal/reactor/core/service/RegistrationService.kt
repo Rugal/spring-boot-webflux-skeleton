@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Service
-class RegistrationService(
+open class RegistrationService(
   val dao: RegistrationDao,
   private val studentService: StudentService,
   private val courseService: CourseService,
@@ -45,7 +45,12 @@ class RegistrationService(
       .flatMap { dao.save(it) }
   }
 
-  fun deleteById(id: Int): Mono<Boolean> = this.dao.findById(id)
-    .doOnNext { this.dao.deleteById(id) }
+  /**
+   * Delete entry if found, otherwise emit error.
+   * Return iff entry exist.
+   */
+  @Throws(RegistrationNotFoundException::class)
+  fun deleteById(id: Int): Mono<Boolean> = this.findById(id)
+    .doOnNext { this.dao.deleteById(id).subscribe() }
     .hasElement()
 }

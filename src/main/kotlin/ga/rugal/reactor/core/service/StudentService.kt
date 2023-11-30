@@ -22,10 +22,11 @@ class StudentService(
    * check any existing registration is under this entity before deleting it.
    */
   fun deleteById(id: Int): Mono<Boolean> = this.registrationService.dao
-    .existsByStudentId(id)
+    .findByStudentId(id)
+    .hasElements()
     // unable to delete if true
     .filter { it == false }
+    .doOnNext { this.dao.deleteById(id).subscribe() }
     .switchIfEmpty { Mono.error(StudentReferenceException(id)) }
-    .map { this.dao.deleteById(id) }
-    .thenReturn(true)
+    .map { !it }
 }

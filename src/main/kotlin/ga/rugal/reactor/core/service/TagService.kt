@@ -9,9 +9,18 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Service
 class TagService(
-  val tagDao: TagDao
+  val dao: TagDao
 ) {
-  fun findById(id: Int): Mono<Tag> = this.tagDao
+  fun findById(id: Int): Mono<Tag> = this.dao
     .findById(id)
     .switchIfEmpty { Mono.error { TagNotFoundException(id) } }
+
+  /**
+   * Delete entry if found, otherwise emit error.
+   * Return iff entry exist.
+   */
+  @Throws(TagNotFoundException::class)
+  fun deleteById(id: Int): Mono<Boolean> = this.findById(id)
+    .doOnNext { this.dao.deleteById(id).subscribe() }
+    .hasElement()
 }

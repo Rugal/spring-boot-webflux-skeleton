@@ -6,10 +6,8 @@ import ga.rugal.reactor.core.dao.RegistrationDao
 import ga.rugal.reactor.core.entity.Course
 import ga.rugal.reactor.core.entity.Registration
 import ga.rugal.reactor.core.entity.Student
-import ga.rugal.reactor.springmvc.exception.CourseNotFoundException
 import ga.rugal.reactor.springmvc.exception.RedundantRegistrationException
 import ga.rugal.reactor.springmvc.exception.RegistrationNotFoundException
-import ga.rugal.reactor.springmvc.exception.StudentNotFoundException
 import io.mockk.called
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -136,8 +134,8 @@ class RegistrationServiceTest : UnitTestBase() {
 
     StepVerifier
       .create(this.service.deleteById(u.id))
-      .expectNextMatches { it == false }
-      .verifyComplete()
+      .expectError(RegistrationNotFoundException::class.java)
+      .verify()
 
     verify(exactly = 1) { dao.findById(u.id) }
     verify { dao.deleteById(u.id) wasNot called }
