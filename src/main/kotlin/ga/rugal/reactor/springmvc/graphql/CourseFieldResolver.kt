@@ -18,10 +18,12 @@ class CourseFieldResolver(
   private val courseService: CourseService,
   private val registrationService: RegistrationService,
 ) : CourseResolver {
-  override fun registration(course: CourseDto, env: DataFetchingEnvironment): Flux<RegistrationDto> = this.registrationService
-    .dao
-    .findByCourseId(course.id)
-    .map(RegistrationMapper.I::from)
+  override fun registration(course: CourseDto, env: DataFetchingEnvironment): Flux<RegistrationDto> {
+    return this.registrationService
+      .dao
+      .findByCourseId(course.id)
+      .map(RegistrationMapper.I::from)
+  }
 
   override fun delete(dto: CourseDto, env: DataFetchingEnvironment): Mono<Boolean> = this.courseService
     .deleteById(dto.id)

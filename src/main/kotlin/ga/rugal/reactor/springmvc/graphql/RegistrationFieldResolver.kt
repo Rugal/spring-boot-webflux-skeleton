@@ -12,8 +12,11 @@ import ga.rugal.reactor.springmvc.mapper.CourseMapper
 import ga.rugal.reactor.springmvc.mapper.RegistrationMapper
 import ga.rugal.reactor.springmvc.mapper.StudentMapper
 import graphql.schema.DataFetchingEnvironment
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.graphql.data.method.annotation.BatchMapping
 import org.springframework.stereotype.Controller
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 
 @Controller
 class RegistrationFieldResolver(
@@ -22,10 +25,21 @@ class RegistrationFieldResolver(
   private val registrationService: RegistrationService,
 ) : RegistrationResolver {
 
-  override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
-    .findById(input.id)
-    .flatMap { studentService.findById(it.studentId) }
-    .map(StudentMapper.I::from)
+  private val LOG = KotlinLogging.logger { }
+
+//  override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
+//    .findById(input.id)
+//    .flatMap { studentService.findById(it.studentId) }
+//    .map(StudentMapper.I::from)
+
+  @BatchMapping(typeName = "Registration")
+  fun student(input: List<RegistrationDto>): Mono<Map<RegistrationDto, Mono<StudentDto>>> = input.associateWith {
+    registrationService
+      .findById(it.id)
+      .flatMap { studentService.findById(it.studentId) }
+      .map(StudentMapper.I::from)
+  }
+    .toMono()
 
   override fun course(input: RegistrationDto, env: DataFetchingEnvironment): Mono<CourseDto> = registrationService
     .findById(input.id)
