@@ -24,13 +24,13 @@ class RegistrationFieldResolver(
 
   override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
     .findById(input.id)
-    .flatMap { studentService.findById(it.studentId!!) }
-    .map { StudentMapper.I.from(it) }
+    .flatMap { studentService.findById(it.studentId) }
+    .map(StudentMapper.I::from)
 
   override fun course(input: RegistrationDto, env: DataFetchingEnvironment): Mono<CourseDto> = registrationService
     .findById(input.id)
-    .flatMap { courseService.findById(it.studentId!!) }
-    .map { CourseMapper.I.from(it) }
+    .flatMap { courseService.findById(it.courseId) }
+    .map(CourseMapper.I::from)
 
   override fun update(
     dto: RegistrationDto,

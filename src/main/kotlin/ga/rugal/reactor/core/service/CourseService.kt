@@ -26,7 +26,7 @@ class CourseService(
     .hasElements()
     // unable to delete if true
     .filter { it == false }
-    .doOnNext() { this.dao.deleteById(id).subscribe() }
+    .doOnNext { this.dao.deleteById(id).subscribe() }
     .switchIfEmpty { Mono.error(CourseReferenceException(id)) }
     .map { !it }
 }

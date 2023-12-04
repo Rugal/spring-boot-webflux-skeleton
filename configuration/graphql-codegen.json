@@ -2,8 +2,10 @@
   "fieldsWithResolvers": [
     "Course.delete",
     "Course.update",
+    "Course.registration",
     "Student.delete",
     "Student.update",
+    "Student.registration",
     "Registration.course",
     "Registration.delete",
     "Registration.student",

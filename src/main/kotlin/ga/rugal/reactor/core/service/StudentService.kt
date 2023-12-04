@@ -13,7 +13,6 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 class StudentService(
   val dao: StudentDao,
   val registrationDao: RegistrationDao,
-//  private val registrationService: RegistrationService,
 ) {
 
   fun findById(id: Int): Mono<Student> = this.dao

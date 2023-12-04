@@ -14,7 +14,10 @@ type Course {
   name: String!
   createAt: Int!
   updateAt: Int!
-
+  """
+  All registration associated with this very course
+  """
+  registration: [Registration!]!
   delete: Boolean!
   update(input: UpdateCourse!): Course!
 }
