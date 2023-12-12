@@ -26,6 +26,7 @@
     "^Mutation\\.\\w+$": ["org.springframework.graphql.data.method.annotation.MutationMapping"],
     "^Subscription\\.\\w+$": ["org.springframework.graphql.data.method.annotation.SubscriptionMapping"]
   },
+  "generatedLanguage": "KOTLIN",
   "resolverArgumentAnnotations": ["org.springframework.graphql.data.method.annotation.Argument"],
   "generateDataFetchingEnvironmentArgumentInApis": true
 }

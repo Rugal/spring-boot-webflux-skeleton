@@ -16,7 +16,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.graphql.data.method.annotation.BatchMapping
 import org.springframework.stereotype.Controller
 import reactor.core.publisher.Mono
-import reactor.kotlin.core.publisher.toMono
+import reactor.kotlin.core.publisher.toFlux
 
 @Controller
 class RegistrationFieldResolver(
@@ -27,19 +27,22 @@ class RegistrationFieldResolver(
 
   private val LOG = KotlinLogging.logger { }
 
-//  override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
-//    .findById(input.id)
-//    .flatMap { studentService.findById(it.studentId) }
-//    .map(StudentMapper.I::from)
+  override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
+    .findById(input.id)
+    .flatMap { studentService.findById(it.studentId) }
+    .map(StudentMapper.I::from)
 
   @BatchMapping(typeName = "Registration")
-  fun student(input: List<RegistrationDto>): Mono<Map<RegistrationDto, Mono<StudentDto>>> = input.associateWith {
-    registrationService
-      .findById(it.id)
-      .flatMap { studentService.findById(it.studentId) }
-      .map(StudentMapper.I::from)
-  }
-    .toMono()
+  fun student(input: List<RegistrationDto>): Mono<Map<RegistrationDto, Mono<StudentDto>>> = input.toFlux()
+    .distinct { it.id }
+    .flatMap { registrationService.findById(it.id) }
+    .groupBy { it.studentId }
+    .map { studentService.findById(it.key()) to it.map { it } }
+    .flatMap { p -> p.second.map { it to p.first } }
+    .collectMap(
+      { RegistrationMapper.I.from(it.first) },
+      { it.second.map(StudentMapper.I::from) }
+    )
 
   override fun course(input: RegistrationDto, env: DataFetchingEnvironment): Mono<CourseDto> = registrationService
     .findById(input.id)
@@ -56,6 +59,6 @@ class RegistrationFieldResolver(
     .flatMap { this.registrationService.dao.save(it) }
     .map { RegistrationMapper.I.from(it) }
 
-  override fun delete(dto: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> =
-    this.registrationService.deleteById(dto.id)
+  override fun delete(registration: RegistrationDto, env: DataFetchingEnvironment): Mono<Boolean> =
+    this.registrationService.deleteById(registration.id)
 }
