@@ -5,6 +5,8 @@ import ga.rugal.r2dbc.graphql.RegistrationDto
 import ga.rugal.r2dbc.graphql.RegistrationResolver
 import ga.rugal.r2dbc.graphql.StudentDto
 import ga.rugal.r2dbc.graphql.UpdateRegistrationDto
+import ga.rugal.reactor.core.entity.Registration
+import ga.rugal.reactor.core.entity.Student
 import ga.rugal.reactor.core.service.CourseService
 import ga.rugal.reactor.core.service.RegistrationService
 import ga.rugal.reactor.core.service.StudentService
@@ -15,7 +17,9 @@ import graphql.schema.DataFetchingEnvironment
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.graphql.data.method.annotation.BatchMapping
 import org.springframework.stereotype.Controller
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.collectMap
 import reactor.kotlin.core.publisher.toFlux
 
 @Controller
@@ -27,22 +31,21 @@ class RegistrationFieldResolver(
 
   private val LOG = KotlinLogging.logger { }
 
-  override fun student(input: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> = registrationService
-    .findById(input.id)
-    .flatMap { studentService.findById(it.studentId) }
-    .map(StudentMapper.I::from)
-
   @BatchMapping(typeName = "Registration")
-  fun student(input: List<RegistrationDto>): Mono<Map<RegistrationDto, Mono<StudentDto>>> = input.toFlux()
-    .distinct { it.id }
-    .flatMap { registrationService.findById(it.id) }
-    .groupBy { it.studentId }
-    .map { studentService.findById(it.key()) to it.map { it } }
-    .flatMap { p -> p.second.map { it to p.first } }
-    .collectMap(
-      { RegistrationMapper.I.from(it.first) },
-      { it.second.map(StudentMapper.I::from) }
-    )
+  fun student(input: List<RegistrationDto>): Mono<Map<RegistrationDto, StudentDto>> {
+
+    val registrations: Flux<Registration> = registrationService.dao.findAllById(input.toFlux().map { it.id }.distinct())
+    // this way will only query registrations once
+    return registrations.collectMap { it.id }.flatMap { rm: Map<Int, Registration> ->
+      // reuse rm object
+      studentService.dao.findAllById(rm.values.map { it.studentId }.distinct()).collectMap { it.id }
+        .flatMap { sm: Map<Int, Student> ->
+          input.toFlux()
+            .map { it to StudentMapper.I.from(sm[rm[it.id]!!.studentId]!!) }
+            .collectMap()
+        }
+    }
+  }
 
   override fun course(input: RegistrationDto, env: DataFetchingEnvironment): Mono<CourseDto> = registrationService
     .findById(input.id)
