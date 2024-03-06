@@ -1,0 +1,23 @@
+@startuml
+
+!theme spacelab
+
+' configures the library
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="/Users/rugal/Workspace/plantuml-libs/distribution"
+
+' loads the library's bootstrap
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+' loads the package bootstrap
+include('eventstorming/full')
+
+!include domain-event.puml
+!include command.puml
+!include person.puml
+!include aggregation.puml
+!include read-model.puml
+!include relationship.puml
+' Policy("aaa", "Rugal") 
+
+@enduml

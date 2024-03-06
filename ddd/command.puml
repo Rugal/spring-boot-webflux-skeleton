@@ -1,0 +1,72 @@
+' command
+Command("register_course") [
+    Register Course
+    --fields--
+    course id
+    student id
+    --constraint--
+    1. course must exist
+    2. student must exist
+    3. student can only register same course id once
+    --event--
+    publish Course Registered event
+]
+
+Command("cancel_registration") [
+    Cancel Course Registration
+    --fields--
+    registration id
+    --
+    1. the course is not graded for this very student id yet
+    --event--
+    publish Registration Cancelled event
+]
+
+Command("create_course") [
+    Create Course
+    --fields--
+    credit
+    name
+    teacher id
+    --event--
+    publish Course Created event
+]
+
+Command("grade_student") [
+    Grade Student
+    --fields--
+    registration id
+    grade
+    teacher id
+    --
+    1. student must registered in this course
+    2. course must not yet graded for this very student
+    3. teacher must only grade students that register under courses created by this teacher
+    4. grade range from 0 to 100
+    --event--
+    publish Student Graded event
+]
+
+Command("create_student") [
+    Create Student
+    --fields--
+    student id
+    name
+    faculty
+    --constraint--
+    student id must be unique
+    --event--
+    publish Student Created event
+]
+
+Command("create_teacher") [
+    Create Teacher
+    --fields--
+    teacher id
+    name
+    faculty
+    --constraint--
+    teacher id must be unique
+    --event--
+    publish Teacher Created event
+]

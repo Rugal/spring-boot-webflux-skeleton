@@ -18,3 +18,5 @@ nb-configuration.xml
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
 *.db
+*.png
+ddd/*.svg

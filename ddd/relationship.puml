@@ -1,0 +1,38 @@
+'relationship
+
+' actor
+s -down-> register_course
+s -down-> cancel_registration
+
+t -down-> create_course
+t -down-> grade_student
+
+a -down-> create_student
+a -down-> create_teacher
+
+' command
+create_student -down-> student_aggregation
+create_teacher -down-> teacher_aggregation
+
+register_course -down-> registration_aggregation
+cancel_registration -down-> registration_aggregation
+grade_student -down-> registration_aggregation
+create_course -down-> course_aggregation
+
+' aggregation
+course_aggregation -down-> course_created
+registration_aggregation -down-> course_registered
+registration_aggregation -down-> registration_cancelled
+registration_aggregation -down-> student_graded
+registration_aggregation ...> course_aggregation: use
+registration_aggregation ...> student_aggregation: use
+student_aggregation -down-> student_created
+teacher_aggregation -down-> teacher_created
+
+' domain event
+course_created -down-> course_table
+teacher_created -down-> teacher_table
+student_created -down-> student_table
+course_registered -down-> registration_table
+student_graded -down-> registration_table
+registration_cancelled -down-> registration_table

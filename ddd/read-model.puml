@@ -1,0 +1,37 @@
+ReadModel("course_table") [
+    course
+    --id--
+    course id
+    --field--
+    name
+    teacher id
+    credit
+]
+
+ReadModel("teacher_table") [
+    teacher
+    --id--
+    teacher id 
+    --field--
+    name
+    faculty
+]
+
+ReadModel("student_table") [
+    student
+    --id--
+    student id 
+    --field--
+    name
+    faculty
+]
+
+ReadModel("registration_table") [
+    registration
+    --id--
+    registration id
+    --field--
+    course id
+    student id
+    grade
+]

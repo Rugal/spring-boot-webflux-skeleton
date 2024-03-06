@@ -1,0 +1,4 @@
+' display elements
+Person("s", "Student")
+Person("t", "Teacher")
+Person("a", "Admin")

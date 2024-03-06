@@ -1,0 +1,46 @@
+' aggregate
+' Aggregate("student_aggregation") [
+'     Student
+'     --id--
+'     student id
+'     --fields--
+'     courses
+' ]
+
+Aggregate("registration_aggregation") [
+    Registration
+    --id--
+    registration id
+    --field--
+    course id
+    student id
+    grade
+]
+
+Aggregate("course_aggregation") [
+    Course
+    --id--
+    course id
+    --field--
+    name
+    credit
+    teacher id
+]
+
+Aggregate("student_aggregation") [
+    Student
+    --id--
+    student id
+    --field--
+    name
+    faculty
+]
+
+Aggregate("teacher_aggregation") [
+    Teacher
+    --id--
+    teacher id
+    --field--
+    name
+    faculty
+]
