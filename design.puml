@@ -1,0 +1,76 @@
+@startuml
+' configures the library
+!global $INCLUSION_MODE="local"
+!global $LIB_BASE_LOCATION="/Users/rugal/Downloads/plantuml-libs/distribution"
+
+' loads the library's bootstrap
+!include $LIB_BASE_LOCATION/bootstrap.puml
+
+' loads the package bootstrap
+include('eventstorming/full')
+
+' display elements
+Person("s", "Student")
+Person("t", "Teacher")
+Person("a", "Admin")
+
+Command("register_course") [
+    Register Course
+    --fields--
+    course id
+    --
+]
+
+Command("create_course") [
+    Create Course
+    --fields--
+    name
+    credit
+    --
+]
+
+Command("grade_student") [
+    Grade Student
+    --fields--
+    course id
+    student id
+    --
+]
+
+Command("create_student") [
+    Create Student
+    --
+]
+
+Command("create_teacher") [
+    Create Teacher
+    --
+]
+
+Event("course_registered", "Course Registered")
+Event("course_created", "Course Created")
+Event("student_graded", "Student Graded")
+Event("student_created", "Student Created")
+Event("teacher_created", "Teacher Created")
+
+Aggregate("123")
+
+' display relationships
+
+
+s -down-> register_course
+
+t -down-> create_course
+t -down-> grade_student
+
+a -down-> create_student
+a -down-> create_teacher
+
+register_course -down-> course_registered
+create_course -down-> course_created
+grade_student -down-> student_graded
+
+create_student --> student_created
+create_teacher --> teacher_created
+
+@enduml
