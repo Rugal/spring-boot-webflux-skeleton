@@ -1,7 +1,6 @@
 package ga.rugal.reactor.core.entity
 
 import java.time.Instant
-import jakarta.persistence.Column
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
 import org.springframework.data.annotation.Id

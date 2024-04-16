@@ -162,7 +162,7 @@
           </execution>
         </executions>
         <configuration>
-          <skip>true</skip>
+          <skip>false</skip>
           <graphqlSchemas>
             <rootDir>${project.basedir}/src/main/resources/graphql</rootDir>
           </graphqlSchemas>

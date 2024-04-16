@@ -47,6 +47,10 @@ class RegistrationFieldResolver(
     }
   }
 
+  override fun student(registration: RegistrationDto, env: DataFetchingEnvironment): Mono<StudentDto> {
+    TODO("Not yet implemented")
+  }
+
   override fun course(input: RegistrationDto, env: DataFetchingEnvironment): Mono<CourseDto> = registrationService
     .findById(input.id)
     .flatMap { courseService.findById(it.courseId) }
